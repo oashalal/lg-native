@@ -1,0 +1,14 @@
+{
+  "id": "css-style",
+  "name": "Видимый акцент панели",
+  "version": "0.1.0",
+  "type": "css",
+  "enabled": true,
+  "siteVersions": [],
+  "strict": false,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "targets": [{ "file": "/site/style.css", "replacement": ".site-head{outline:1px solid color-mix(in srgb, #8ab4ff 40%, transparent)}" }],
+  "requires": [],
+  "onFail": "disable",
+  "settings": {}
+}

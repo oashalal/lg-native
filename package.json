@@ -1,0 +1,31 @@
+{
+  "name": "lg-native",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Безопасная Electron-оболочка Legion с локальными патчами интерфейса",
+  "main": "dist/src/main/app.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json --outDir dist",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm typecheck && vitest run",
+    "start": "pnpm build && electron .",
+    "lint": "eslint src tests tools patches --ext .ts"
+  },
+  "pnpm": {"onlyBuiltDependencies": ["electron", "esbuild"]},
+  "devEngines": {"packageManager": {"name": "pnpm", "version": "12.21.0", "onFail": "download"}},
+  "packageManager": "pnpm@12.21.0",
+  "dependencies": {
+    "acorn": "^8.19.0",
+    "pino": "^10.4.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^26.6.6",
+    "electron": "^45.3.3",
+    "eslint": "^10.15.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "source-expose",
+  "name": "Публикация api и ME",
+  "version": "0.1.0",
+  "type": "source",
+  "enabled": true,
+  "siteVersions": ["13ebcdcfc1"],
+  "strict": true,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "targets": [{ "file": "/site/app.js", "anchor": "    ME = next; nameItems(ME && ME.hero);", "expect": 1, "replacement": "    ME = next; nameItems(ME && ME.hero); if (window.LGX) { window.LGX.expose('api', api); window.LGX.expose('ME', ME); }" }],
+  "requires": [],
+  "onFail": "original",
+  "settings": {}
+}

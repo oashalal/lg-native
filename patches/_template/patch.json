@@ -1,0 +1,13 @@
+{
+  "id": "my-patch",
+  "name": "Название патча",
+  "version": "0.1.0",
+  "type": "runtime",
+  "enabled": false,
+  "siteVersions": ["13ebcdcfc1"],
+  "strict": false,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "requires": [],
+  "onFail": "disable",
+  "settings": {}
+}

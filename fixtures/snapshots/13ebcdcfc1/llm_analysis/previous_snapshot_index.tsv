@@ -1,0 +1,64 @@
+SNAPSHOT FILE INDEX: PREVIOUS
+directory: live_snap_67a7a02a5f_20261116_160652
+version: 67a7a02a5f
+complete: False
+published: True
+total accessible files: 57
+path	bytes	sha256	content_type	source	stale
+/c/5opka/	7814	1767d186500a521ff535190e17fa48387912141ce4a03a7899096bcb5d73d132	text/html; charset=utf-8	seed	no
+/c/5opka/doodle.js	169023	235c75be6f2373d316da27d2f356b27f729396aa90215ef80a6a46bb1dac1ca5	text/javascript; charset=utf-8	seed	no
+/c/exx1dae/	7826	9d31eaabfb4fab997a79fd752d3e50e2442d8a7cd453e45c3ac1a631ed079cea	text/html; charset=utf-8	seed	no
+/c/exx1dae/doodle.js	240577	1483e6498e39bb299ccc999ffdbe29bd6d9e53cf9b7055a7284566c2ef2fe456	text/javascript; charset=utf-8	seed	no
+/c/zakvielchannel/	7866	b09e55ba304fd880a616a91368e4aeaa026589fcbd3eb15009bc2ba336c05778	text/html; charset=utf-8	seed	no
+/c/zakvielchannel/doodle.js	238709	5d3933078e17499f9b21325c03c36f47bced67a4804033c41b031ecb6024d9b0	text/javascript; charset=utf-8	seed	no
+/c/zakvielnight/	7856	9a290a7b3ccca2685f4f2bc6c42d39c59cd6d5dd72686514d9ddf884ef3c38fe	text/html; charset=utf-8	seed	no
+/c/zakvielnight/doodle.js	169023	235c75be6f2373d316da27d2f356b27f729396aa90215ef80a6a46bb1dac1ca5	text/javascript; charset=utf-8	seed	no
+/lib/game-data.js	18032	00a54ea78c9e7d64e0eda800036586b794748749f78bc23f0a1b9d40e76b70f1	text/javascript; charset=utf-8	seed	no
+/lib/inventory.css	28715	a919bfba215cc36088f9c609d212c7c02a0075f7ef6f8de54e80efd2c3a1d5c4	text/css; charset=utf-8	ref	no
+/lib/inventory.js	93624	49f234376b60fe5b0a395fbe625b9317c2225e2f72d9b81c13beaadf49eeede2	text/javascript; charset=utf-8	seed	no
+/lib/site-live.js	8147	412b342f44c6dded1f6d5c93395448e5755bd8ebe7331eeca2a128cce3239b06	text/javascript; charset=utf-8	ref	no
+/lib/site-ui.js	28583	993ccbc5db880685a21aabecf80693d6b5a83d4e90e0797d0b5375536ab3f90d	text/javascript; charset=utf-8	seed	no
+/lib/ui-kit.js	2545	47688a61f1abb8d2c477044f7c41bcb890c4d39be118ff28be90291d5681ee2b	text/javascript; charset=utf-8	seed	no
+/lib/world.js	14070	3eb6977eb3048b5ef04439ed1f8ca5f5cb9cb7e624371b0b21dd2bba591bc673	text/javascript; charset=utf-8	seed	no
+/site/achievements.css	10076	ef9af19cbc7f4dd868925bf53e228386457fcec77414b8362dba07059c5cbcbc	text/css; charset=utf-8	ref	no
+/site/achievements.js	18136	d67de8687b8ff98091e00c700a51ac1df5606f5323286ee56ee5c3dc390d025e	text/javascript; charset=utf-8	seed	no
+/site/app.js	338365	5daf9a327f232144cf93281f2fe5fdfb78ebe5781cab4178b25168d0c4113820	text/javascript; charset=utf-8	seed	no
+/site/bugreport.css	5265	57e4e61bfbeb33bf265a19bbf18ffdfaf0ee606ba3a23a364aa025a17de40cb8	text/css; charset=utf-8	version-map	no
+/site/bugreport.js	16158	a0c620e2a392b4a216c3c374563c2745bf620e34251a1c1fcfafc2af575dab6c	text/javascript; charset=utf-8	version-map	no
+/site/citymon.css	12914	bc0f9fac6917aa5b99a4d3f12de8aa02a735e5c84caf3dab9e59608e6a12ec98	text/css; charset=utf-8	version-map	no
+/site/craft.css	2224	3b36f2a62009b3d8c93fad2460e62cffcf1757a4fc4c61caacd3e71090225375	text/css; charset=utf-8	version-map	no
+/site/craft.js	11672	2729217eba1485141516e7bcae84fc6156534b0a8bc985d08873e772f726ec78	text/javascript; charset=utf-8	version-map	no
+/site/dailies.css	6190	edc787bc169583f4bf1ceb50c3070b5707ff8a7dcf55ff82d93680ebcff05b68	text/css; charset=utf-8	ref	no
+/site/dailies.js	16467	ce6f6f0538b120fb44021c10b5fa4d41dcc2f076d3454d9a39bdd8d9582e7459	text/javascript; charset=utf-8	ref	no
+/site/emblems.js	44798	a3044f2dfbd810c080eb9701c5fefa8b09f3cb7f4ec36c078658f0c02620d8b5	text/javascript; charset=utf-8	version-map	no
+/site/favicon.svg	7990	29c67fffc8ed9ba9361c77ba4d7178195fb5cace06faeb25eef714fead4497e3	image/svg+xml	ref	no
+/site/fish2.css	15598	313d074b2a6692f03664e614831c2b8c251ceecbfd5a9e609463c8f253e8327a	text/css; charset=utf-8	version-map	no
+/site/fish2.js	160967	4ae6fa74b59045bc59e5f657b1cc4b11afbde28ffa9d4cdc4c15f8555ec83506	text/javascript; charset=utf-8	version-map	no
+/site/friends.css	5846	afddc4bcf7a49ca8b0cf50ceb31282925fb1d43c471997b25070a2f5b289be8e	text/css; charset=utf-8	version-map	no
+/site/friends.js	17516	2ba879d946669b884e636e500b1a3046f54df66be60e6479261c0a313afa9796	text/javascript; charset=utf-8	version-map	no
+/site/guildhall.css	6852	2a6e7cefb42c3a641a40311d89e99739d4d2defde5889d9079f9814ba1917e89	text/css; charset=utf-8	version-map	no
+/site/guildhall.js	133766	2e90535476831edee4e5dee396f66e0f08a71de6662af26474b4e0b4ada1130c	text/javascript; charset=utf-8	version-map	no
+/site/guildicons.js	45861	a9f59a056355410fb7c77d7675499ca78c4224b5eb4bc4bcae1d315400b0c8fa	text/javascript; charset=utf-8	version-map	no
+/site/guildraid.css	11493	723fcffb82d9e5bd21a184b70043e8aab508f556c99ce35cf163464359d24168	text/css; charset=utf-8	version-map	no
+/site/guildraid.js	23726	da73d0cf7dec1aeed29588f273105f75ef35d6cc0d81c0919a91bb2765579974	text/javascript; charset=utf-8	version-map	no
+/site/guildrun.css	16863	c68b978df857951972ac739c3fb9805e51d5c90ed3eb569d86920e6847f91445	text/css; charset=utf-8	version-map	no
+/site/guildrun.js	34033	d407294d180a8daf1bdb65bda3c10b1228b3ce3428b03941a6b75fd5525abd98	text/javascript; charset=utf-8	version-map	no
+/site/guilds.css	52242	1e61ebd1a1222a01a008568287d5a13ef863daf6c7bb5425024000f357238029	text/css; charset=utf-8	version-map	no
+/site/guilds.js	126017	7f260fe7309235d0d84a944967c7f30c1e171d521a12497b78a7466c2aa2acb1	text/javascript; charset=utf-8	version-map	no
+/site/lore.js	3228	cc8ddf9b2de2719e4897ddedc59bc116487913b5809066ba6ff9d00b0e89726f	text/javascript; charset=utf-8	seed	no
+/site/mail.css	13124	4452c447cca0d3fc47115aaeea39dc5a98155cf15f3706d92bf3bd173ef918d6	text/css; charset=utf-8	version-map	no
+/site/mail.js	29561	2a2615da230d4ae628904bf756d522f1de70be97f2eee0f12d4265b9062d4b08	text/javascript; charset=utf-8	version-map	no
+/site/minimap.css	11887	0494437ac1d0330244af06cc181652721b34af671ddd51a244fb9918beb53890	text/css; charset=utf-8	version-map	no
+/site/minimap.js	36163	7cb53b48774016a404ee179f38c669ffcbe879e92eda80eb5101d3ac54b6d379	text/javascript; charset=utf-8	version-map	no
+/site/news.css	15683	aff25eaab31118a0b1b5a19e04f32e792f517ca387880a62e476dfa3897d37da	text/css; charset=utf-8	version-map	no
+/site/news.js	35749	fbeedc38ae408ed817be4564e7ea0b1de2fe406a583d7053fd7feaf22ca2d5a4	text/javascript; charset=utf-8	version-map	no
+/site/ore-art.js	22375	f9ca02f33711c85c75c62e8daeeffe520765ad6b6c7e99bac4a08e1a8326efe8	text/javascript; charset=utf-8	seed	no
+/site/pick-art.js	19116	f485e137ce0ce359751412d74c29b425025ced81226bbacaeb2ab48544b01382	text/javascript; charset=utf-8	version-map	no
+/site/playerstart.css	3986	5ca7748f057e104563bc6d49d65421770c959808ebe534b03256b228b2e05416	text/css; charset=utf-8	ref	no
+/site/playerstart.js	11124	c49aa757227439bcf8b22c51f52e505adfcd093202e696c02bf848521f65a959	text/javascript; charset=utf-8	ref	no
+/site/skills.css	36652	f23f10e9a31559ee1433903e8ea48698644929e72a24f0ddc2756d695ab010e0	text/css; charset=utf-8	version-map	no
+/site/skills.js	49235	f0eaa052ea2bd8c12d1ee4675ed67345d3cf5054c2ec0a453b7d83482b149d65	text/javascript; charset=utf-8	version-map	no
+/site/start.css	10935	66e69b6be476049e62d150167041c75af4c4cda159d697dbe42c62f9737ea10d	text/css; charset=utf-8	version-map	no
+/site/start.js	51037	8114ed23b6edbecee304b689c07e4c31395b10a87bd07567e7de9ae379593cdc	text/javascript; charset=utf-8	version-map	no
+/site/style.css	255827	db1cdf7efe905490a54ed373fdd90c8c39256bef056a5dddec1973f054f4242c	text/css; charset=utf-8	ref	no
+/site/ver	18	0f012dc339414f910f8ef32c3bb18aa1e58a59346d1b5cc61779ea162e04d15b	application/json; charset=utf-8	seed	no

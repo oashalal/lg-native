@@ -1,0 +1,13 @@
+{
+  "id": "runtime-live",
+  "name": "Безопасный хук live",
+  "version": "0.1.0",
+  "type": "runtime",
+  "enabled": true,
+  "siteVersions": [],
+  "strict": false,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "requires": ["global:LGLive"],
+  "onFail": "disable",
+  "settings": {}
+}

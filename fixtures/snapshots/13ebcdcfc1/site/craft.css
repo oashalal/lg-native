@@ -1,0 +1,31 @@
+ 
+.cr-w { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: rgba(8, 6, 12, .55); padding: 16px; }
+.cr { width: min(460px, 100%); max-height: calc(100vh - 32px); overflow: auto; padding: 16px 18px !important; display: grid; gap: 10px; margin: 0; }
+.cr h3 { margin: 0; }
+.cr h3 small { font-weight: 400; opacity: .7; margin-left: 6px; }
+.cr h4 { margin: 4px 0 0; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; opacity: .8; }
+.cr-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.cr-x { min-width: 36px; padding: 4px 10px; }
+.cr-body { display: grid; gap: 10px; }
+.cr-art { width: 100%; height: auto; display: block; border-radius: 6px; }
+.cr-float { transform-box: fill-box; transform-origin: center; animation: cr-bob 2.4s ease-in-out infinite; }
+.cr-float.bite { animation: cr-dip .5s ease-in-out infinite; }
+@keyframes cr-bob { 50% { transform: translateY(2px); } }
+@keyframes cr-dip { 50% { transform: translateY(5px); } }
+.cr-st { margin: 0; }
+.cr-act { display: flex; flex-wrap: wrap; gap: 8px; }
+.cr-act .btn { flex: 1 1 auto; }
+.cr-big { font-size: 1.15em; }
+.cr-bag { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cr-bag li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 8px; border-radius: 4px; background: var(--surface2, rgba(0, 0, 0, .05)); }
+.cr-meta { margin: 0; font-size: 13px; }
+.cr-pl { margin: 0; font-size: 13px; }
+.cr-pl select { margin-left: 6px; max-width: 100%; }
+ 
+.cr-dry { margin: 0; padding: 8px 10px; border-radius: 6px; font-size: 13px; background: var(--surface2, rgba(0, 0, 0, .05)); border-left: 3px solid var(--warn, #c9822b); }
+.cr-how ul { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; font-size: 13px; }
+.cr-hub ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.cr-hub li .btn { width: 100%; display: grid; grid-template-columns: 28px 1fr; text-align: left; gap: 0 8px; }
+.cr-hub li .btn small { grid-column: 2; opacity: .75; }
+@media (prefers-reduced-motion: reduce) { .cr-float, .cr-float.bite { animation: none; } }
+@media (max-width: 480px) { .cr-w { padding: 8px; } .cr { padding: 12px !important; } }
