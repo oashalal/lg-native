@@ -15,7 +15,7 @@
   const now = () => Date.now() + OFF;
   const clock = (t) => { const d = (+t || 0) - Date.now(); if (Number.isFinite(d)) OFF = Math.abs(d) > 1500 ? d : 0; };
   const api = (p, body) => (DEMO ? DEMO.api(p, body) : fetch(p, { ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {}), ...(typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? { signal: AbortSignal.timeout(20000) } : {}) })
-    .then((r) => { try { const d = Date.parse(r.headers.get('date') || ''); if (d) clock(d + 500); } catch {} SU.holdFrom(r); return r.json(); }))
+    .then((r) => { try { const d = Date.parse(r.headers.get('date') || ''); if (d) clock(d + 500); } catch {} SU.holdFrom(r); return r.json().then((j) => SU.withCode(j)); }))
     .catch(() => ({ ok: false, error: 'нет связи с сайтом' }));
   
 
@@ -1082,7 +1082,7 @@
     const ERR = { bad_email: 'Это не похоже на адрес почты.', rate_limited: 'Слишком много писем - подожди немного (до часа).', bad_code: 'Код не подошёл.',
       too_many: 'Слишком много неверных попыток - код больше не действует. Пришли новый.', expired: 'Код уже не действует (15 минут прошло или им воспользовались). Пришли новый.',
       taken: 'Эта почта уже привязана к другому аккаунту.', same_email: 'Эта почта уже привязана к тебе.', banned: 'Аккаунт заблокирован в игре.', feature_closed: 'Пока недоступно.', no_email: 'Почта не привязана.' };
-    const errOf = (j) => ERR[j && j.error] || (j && j.error) || 'Не вышло - попробуй ещё раз.';
+    const errOf = (j) => (ERR[j && j.error] ? ERR[j.error] + ((window.LGSiteUi && window.LGSiteUi.closedCode && window.LGSiteUi.closedCode(j)) || '') : (j && j.error) || 'Не вышло - попробуй ещё раз.');
     let st = { email: null }, wait = null, closed = false;
     const draw = (msg, bad) => {
       if (closed) return;
@@ -4669,7 +4669,7 @@
     }
     ES.addEventListener('style', (e) => { let d = {}; try { d = JSON.parse(e.data) || {}; } catch {} styleEvent(String(d.style || '')); });
     ES.addEventListener('sm', (e) => { let d = {}; try { d = JSON.parse(e.data) || {}; } catch {} if ((d.why || []).includes('mods')) { smStale = true; smStaleCheck(); } smRefresh(true, d.style); smTell(d.why); });
-    ES.addEventListener('open', () => { if (!DOCK) window.dispatchEvent(new CustomEvent('lg-gchat', { detail: { k: 're' } })); });
+    ES.addEventListener('open', () => { if (DOCK) return; window.dispatchEvent(new CustomEvent('lg-gchat', { detail: { k: 're' } })); if (window.LGChatOne && window.LGChatOne.resync) window.LGChatOne.resync(); });
     ES.onopen = () => { smEs = !!q; if (q && smOpen++ && SM.data) smRefresh(true); };
 
     ES.onerror = () => { esOk = false; smEs = false; };

@@ -7,3 +7,10 @@ reports/
 .env*
 playwright-report/
 test-results/
+# Snapshots retain only patch targets and the manifest in git.
+fixtures/snapshots/*/*
+!fixtures/snapshots/*/snapshot_manifest.json
+!fixtures/snapshots/*/site/
+fixtures/snapshots/*/site/*
+!fixtures/snapshots/*/site/app.js
+!fixtures/snapshots/*/site/style.css

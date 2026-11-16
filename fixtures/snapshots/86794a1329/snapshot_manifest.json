@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "kind": "version",
-  "complete": false,
-  "publication_status": "partial",
-  "created_at_utc": "2026-11-16T13:32:40Z",
-  "started_at_utc": "2026-11-16T13:29:20Z",
-  "elapsed_seconds": 199.688,
+  "complete": true,
+  "publication_status": "complete",
+  "created_at_utc": "2026-11-16T17:04:52Z",
+  "started_at_utc": "2026-11-16T17:01:25Z",
+  "elapsed_seconds": 207.675,
   "origin": "https://legiongame.gg",
   "request_context": {
     "cookie_configured": true,
     "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:159.0) Gecko/20100101 Firefox/159.0",
     "cookie_value_saved": false
   },
-  "site_ver": "13ebcdcfc1",
-  "expected_site_ver": "13ebcdcfc1",
+  "site_ver": "86794a1329",
+  "expected_site_ver": "86794a1329",
   "channels": [
     "zakvielchannel",
     "zakvielnight",
@@ -37,7 +37,7 @@
     "downloaded": 99,
     "not_found": 489,
     "denied": 1,
-    "failed": 3,
+    "failed": 0,
     "integrity_errors": 0,
     "versioned_expected": 100,
     "versioned_downloaded": 39,
@@ -54,23 +54,7 @@
     "/site/start.js"
   ],
   "missing_required": [],
-  "failed_requests": [
-    {
-      "path": "/site/newssite.css",
-      "status": 404,
-      "error": "cached stable HTTP 404"
-    },
-    {
-      "path": "/site/newssite.js",
-      "status": 404,
-      "error": "cached stable HTTP 404"
-    },
-    {
-      "path": "/site/worldgeo.json",
-      "status": 404,
-      "error": "cached stable HTTP 404"
-    }
-  ],
+  "failed_requests": [],
   "denied_requests": [
     {
       "path": "/overlay/doodle.js",
@@ -191,31 +175,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/season.js?v=4d1d48ed85",
-      "version": "4d1d48ed85",
+      "request": "/site/season.js?v=aabd21147c",
+      "version": "aabd21147c",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "5opka"
         }
       ]
@@ -647,55 +631,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/lib/site-chat.js?v=2b2595285f",
-      "version": "2b2595285f",
+      "request": "/lib/site-chat.js?v=e1405f9b87",
+      "version": "e1405f9b87",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         }
       ]
@@ -1045,55 +1029,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/city.js?v=dd2642aa45",
-      "version": "dd2642aa45",
+      "request": "/site/city.js?v=e9a47f363a",
+      "version": "e9a47f363a",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         }
       ]
@@ -1163,31 +1147,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/citymon.js?v=5dab1f5630",
-      "version": "5dab1f5630",
+      "request": "/site/citymon.js?v=722ca2f571",
+      "version": "722ca2f571",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "5opka"
         }
       ]
@@ -1670,55 +1654,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/mine.js?v=b68144db3a",
-      "version": "b68144db3a",
+      "request": "/site/mine.js?v=8c8b792cec",
+      "version": "8c8b792cec",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         }
       ]
@@ -1764,31 +1748,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/arena.css?v=f33d27149d",
-      "version": "f33d27149d",
+      "request": "/site/arena.css?v=3cd4536648",
+      "version": "3cd4536648",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "5opka"
         }
       ]
@@ -1834,31 +1818,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/arena.js?v=3e2ec5fbfc",
-      "version": "3e2ec5fbfc",
+      "request": "/site/arena.js?v=ecac8518ec",
+      "version": "ecac8518ec",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "5opka"
         }
       ]
@@ -1928,55 +1912,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/worldmap.js?v=04c0a81b9e",
-      "version": "04c0a81b9e",
+      "request": "/site/worldmap.js?v=6d34c41f1d",
+      "version": "6d34c41f1d",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         }
       ]
@@ -2196,31 +2180,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/lib/site-chatone.js?v=1d7c69ce6c",
-      "version": "1d7c69ce6c",
+      "request": "/lib/site-chatone.js?v=5bd64812be",
+      "version": "5bd64812be",
       "sources": [
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "exx1dae"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "5opka"
         }
       ]
@@ -2544,31 +2528,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/season.js?v=4d1d48ed85",
-      "version": "4d1d48ed85",
+      "request": "/site/season.js?v=aabd21147c",
+      "version": "aabd21147c",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "5opka"
         }
       ]
@@ -3000,55 +2984,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/lib/site-chat.js?v=2b2595285f",
-      "version": "2b2595285f",
+      "request": "/lib/site-chat.js?v=e1405f9b87",
+      "version": "e1405f9b87",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         }
       ]
@@ -3398,55 +3382,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/city.js?v=dd2642aa45",
-      "version": "dd2642aa45",
+      "request": "/site/city.js?v=e9a47f363a",
+      "version": "e9a47f363a",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         }
       ]
@@ -3516,31 +3500,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/citymon.js?v=5dab1f5630",
-      "version": "5dab1f5630",
+      "request": "/site/citymon.js?v=722ca2f571",
+      "version": "722ca2f571",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "5opka"
         }
       ]
@@ -4023,55 +4007,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/mine.js?v=b68144db3a",
-      "version": "b68144db3a",
+      "request": "/site/mine.js?v=8c8b792cec",
+      "version": "8c8b792cec",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         }
       ]
@@ -4117,31 +4101,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/arena.css?v=f33d27149d",
-      "version": "f33d27149d",
+      "request": "/site/arena.css?v=3cd4536648",
+      "version": "3cd4536648",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "5opka"
         }
       ]
@@ -4187,31 +4171,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/site/arena.js?v=3e2ec5fbfc",
-      "version": "3e2ec5fbfc",
+      "request": "/site/arena.js?v=ecac8518ec",
+      "version": "ecac8518ec",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "5opka"
         }
       ]
@@ -4281,55 +4265,55 @@
       "source": "seed",
       "version_status": 404,
       "fallback_status": null,
-      "request": "/site/worldmap.js?v=04c0a81b9e",
-      "version": "04c0a81b9e",
+      "request": "/site/worldmap.js?v=6d34c41f1d",
+      "version": "6d34c41f1d",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         }
       ]
@@ -4549,31 +4533,31 @@
       "source": "version-fallback",
       "version_status": 404,
       "fallback_status": 404,
-      "request": "/lib/site-chatone.js?v=1d7c69ce6c",
-      "version": "1d7c69ce6c",
+      "request": "/lib/site-chatone.js?v=5bd64812be",
+      "version": "5bd64812be",
       "sources": [
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "exx1dae"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "5opka"
         }
       ]
@@ -4882,7 +4866,7 @@
     {
       "path": "/site/season.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/season.js?v=4d1d48ed85",
+      "request_url": "https://legiongame.gg/site/season.js?v=aabd21147c",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5035,7 +5019,7 @@
     {
       "path": "/lib/site-chat.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/lib/site-chat.js?v=2b2595285f",
+      "request_url": "https://legiongame.gg/lib/site-chat.js?v=e1405f9b87",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5125,7 +5109,7 @@
     {
       "path": "/site/city.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/city.js?v=dd2642aa45",
+      "request_url": "https://legiongame.gg/site/city.js?v=e9a47f363a",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5143,7 +5127,7 @@
     {
       "path": "/site/guildhall.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/guildhall.js?v=fdb403a66e",
+      "request_url": "https://legiongame.gg/site/guildhall.js?v=05cbe7d01a",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5161,7 +5145,7 @@
     {
       "path": "/site/guilds.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/guilds.js?v=4426b1a479",
+      "request_url": "https://legiongame.gg/site/guilds.js?v=99a8fdb368",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5170,7 +5154,7 @@
     {
       "path": "/site/citymon.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/citymon.js?v=5dab1f5630",
+      "request_url": "https://legiongame.gg/site/citymon.js?v=722ca2f571",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5251,7 +5235,7 @@
     {
       "path": "/site/mine.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/mine.js?v=b68144db3a",
+      "request_url": "https://legiongame.gg/site/mine.js?v=8c8b792cec",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5305,7 +5289,7 @@
     {
       "path": "/site/arena.css",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/arena.css?v=f33d27149d",
+      "request_url": "https://legiongame.gg/site/arena.css?v=3cd4536648",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5323,7 +5307,7 @@
     {
       "path": "/site/arena.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/arena.js?v=3e2ec5fbfc",
+      "request_url": "https://legiongame.gg/site/arena.js?v=ecac8518ec",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5359,7 +5343,7 @@
     {
       "path": "/site/worldmap.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/site/worldmap.js?v=04c0a81b9e",
+      "request_url": "https://legiongame.gg/site/worldmap.js?v=6d34c41f1d",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -5377,7 +5361,7 @@
     {
       "path": "/site/minimap.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/minimap.js?v=579b4be0ae",
+      "request_url": "https://legiongame.gg/site/minimap.js?v=9c151b3b8b",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5386,7 +5370,7 @@
     {
       "path": "/site/news.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/news.js?v=ccd855e51a",
+      "request_url": "https://legiongame.gg/site/news.js?v=a93dcc72cf",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5458,7 +5442,7 @@
     {
       "path": "/site/guildrun.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/guildrun.js?v=5db5519bed",
+      "request_url": "https://legiongame.gg/site/guildrun.js?v=67cb4a5f05",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5638,7 +5622,7 @@
     {
       "path": "/site/friends.js",
       "status": 200,
-      "request_url": "https://legiongame.gg/site/friends.js?v=ac78ad9ced",
+      "request_url": "https://legiongame.gg/site/friends.js?v=6aabbd1341",
       "response_preview": "",
       "server": "",
       "via": "",
@@ -5656,7 +5640,7 @@
     {
       "path": "/lib/site-chatone.js",
       "status": 404,
-      "request_url": "https://legiongame.gg/lib/site-chatone.js?v=1d7c69ce6c",
+      "request_url": "https://legiongame.gg/lib/site-chatone.js?v=5bd64812be",
       "response_preview": "Нет файла",
       "server": "",
       "via": "",
@@ -6049,7 +6033,7 @@
         "warcmd.css": "991a25365c",
         "warcmd.js": "08b1252d20",
         "season.css": "8936d6ccaf",
-        "season.js": "4d1d48ed85",
+        "season.js": "aabd21147c",
         "city.css": "926b58960c",
         "cityshop.css": "e257862b9c",
         "citystore.css": "7aee70b43b",
@@ -6066,7 +6050,7 @@
         "cityart.js": "b506a7093e",
         "citygl.js": "31193a941a",
         "itemgrid.js": "ff82d71a4a",
-        "/lib/site-chat.js": "2b2595285f",
+        "/lib/site-chat.js": "e1405f9b87",
         "citystore.js": "bcb43457c5",
         "cityshop.js": "2b34c4e8b4",
         "b-forge.js": "4066452ba8",
@@ -6076,12 +6060,12 @@
         "b-hall.js": "cfbf415874",
         "b-board.js": "ca027b09f5",
         "b-trainer.js": "c8c5ca8e6a",
-        "city.js": "dd2642aa45",
+        "city.js": "e9a47f363a",
         "trade.js": "e377f79976",
-        "guildhall.js": "fdb403a66e",
+        "guildhall.js": "05cbe7d01a",
         "emblems.js": "c7463d84ea",
-        "guilds.js": "4426b1a479",
-        "citymon.js": "5dab1f5630",
+        "guilds.js": "99a8fdb368",
+        "citymon.js": "722ca2f571",
         "quest.css": "d777f895d7",
         "q/crowdcam.js": "c9de7e0693",
         "q/battlecrowd.js": "82b5f3660e",
@@ -6090,22 +6074,22 @@
         "mine.css": "2d26d1f58a",
         "craftworld.js": "7d239df397",
         "mine-art.js": "0b23b281f9",
-        "mine.js": "b68144db3a",
+        "mine.js": "8c8b792cec",
         "craft.css": "5e0415fa1a",
         "craft.js": "a1d434fddc",
         "fish2.css": "ed2f4e6f8d",
         "fish2.js": "9b1cede77e",
         "arena-field.css": "7fa6cfe5d7",
-        "arena.css": "f33d27149d",
+        "arena.css": "3cd4536648",
         "arena-field.js": "a660f7a6a5",
-        "arena.js": "3e2ec5fbfc",
+        "arena.js": "ecac8518ec",
         "mail.css": "445351ece3",
         "mail.js": "eb0bd95955",
         "worldmap.css": "c391a0037c",
-        "worldmap.js": "04c0a81b9e",
+        "worldmap.js": "6d34c41f1d",
         "minimap.css": "c07fd83190",
-        "minimap.js": "579b4be0ae",
-        "news.js": "ccd855e51a",
+        "minimap.js": "9c151b3b8b",
+        "news.js": "a93dcc72cf",
         "news.css": "0e6cf0e562",
         "skills.js": "2e3f9a9a10",
         "skills.css": "127fb08d28",
@@ -6113,7 +6097,7 @@
         "guildicons.js": "12efdbba35",
         "guildraid.js": "13b671d75a",
         "guildraid.css": "a421fbb323",
-        "guildrun.js": "5db5519bed",
+        "guildrun.js": "67cb4a5f05",
         "guildrun.css": "96d8e647ab",
         "citymon.css": "8257160db6"
       },
@@ -6121,19 +6105,19 @@
         "fair": "84e4eedfdd",
         "map": "5c68c6dcbb",
         "art": "b506a7093e",
-        "js": "dd2642aa45",
+        "js": "e9a47f363a",
         "st": "bcb43457c5",
         "css": "926b58960c",
         "gl": "31193a941a",
         "cb": "0a7aded76b",
-        "bk": "7ade53a243",
+        "bk": "95db87963b",
         "pixi": "pixi-8.22.0.min.js?v=2aa2cb408b",
         "pixiEval": "pixi-unsafe-eval-8.22.0.min.js?v=e5a56929e9",
         "font": "russo-one.woff?v=fc0283b9f8",
         "au": "59ff7d4b24",
         "auc": "c4c009ec88",
         "ig": "ff82d71a4a",
-        "sc": "2b2595285f",
+        "sc": "e1405f9b87",
         "tr": "e377f79976",
         "tg": "142dcf55af",
         "ta": "2c63f6c0af",
@@ -6154,7 +6138,7 @@
         "ma": "0b23b281f9",
         "mb": "0e5e20b435",
         "sa": "67e818afca",
-        "mj": "b68144db3a",
+        "mj": "8c8b792cec",
         "mc": "2d26d1f58a"
       },
       "LG_QV": {
@@ -6169,7 +6153,7 @@
         "dg": "c241d90567"
       },
       "LG_WORLDV": {
-        "js": "04c0a81b9e",
+        "js": "6d34c41f1d",
         "css": "c391a0037c",
         "geo": "G5-QsC99Grzh",
         "ak": "6f3328710e",
@@ -6187,10 +6171,10 @@
         "css": "70f2db1943"
       },
       "LG_FRV": {
-        "js": "ac78ad9ced",
+        "js": "6aabbd1341",
         "css": "0ef9d1170e"
       },
-      "LG_ONEV": "1d7c69ce6c",
+      "LG_ONEV": "5bd64812be",
       "LG_DMV": "53dd21a1fd"
     },
     "zakvielnight": {
@@ -6198,7 +6182,7 @@
         "warcmd.css": "991a25365c",
         "warcmd.js": "08b1252d20",
         "season.css": "8936d6ccaf",
-        "season.js": "4d1d48ed85",
+        "season.js": "aabd21147c",
         "city.css": "926b58960c",
         "cityshop.css": "e257862b9c",
         "citystore.css": "7aee70b43b",
@@ -6215,7 +6199,7 @@
         "cityart.js": "b506a7093e",
         "citygl.js": "31193a941a",
         "itemgrid.js": "ff82d71a4a",
-        "/lib/site-chat.js": "2b2595285f",
+        "/lib/site-chat.js": "e1405f9b87",
         "citystore.js": "bcb43457c5",
         "cityshop.js": "2b34c4e8b4",
         "b-forge.js": "4066452ba8",
@@ -6225,12 +6209,12 @@
         "b-hall.js": "cfbf415874",
         "b-board.js": "ca027b09f5",
         "b-trainer.js": "c8c5ca8e6a",
-        "city.js": "dd2642aa45",
+        "city.js": "e9a47f363a",
         "trade.js": "e377f79976",
-        "guildhall.js": "fdb403a66e",
+        "guildhall.js": "05cbe7d01a",
         "emblems.js": "c7463d84ea",
-        "guilds.js": "4426b1a479",
-        "citymon.js": "5dab1f5630",
+        "guilds.js": "99a8fdb368",
+        "citymon.js": "722ca2f571",
         "quest.css": "d777f895d7",
         "q/crowdcam.js": "c9de7e0693",
         "q/battlecrowd.js": "82b5f3660e",
@@ -6239,22 +6223,22 @@
         "mine.css": "2d26d1f58a",
         "craftworld.js": "7d239df397",
         "mine-art.js": "0b23b281f9",
-        "mine.js": "b68144db3a",
+        "mine.js": "8c8b792cec",
         "craft.css": "5e0415fa1a",
         "craft.js": "a1d434fddc",
         "fish2.css": "ed2f4e6f8d",
         "fish2.js": "9b1cede77e",
         "arena-field.css": "7fa6cfe5d7",
-        "arena.css": "f33d27149d",
+        "arena.css": "3cd4536648",
         "arena-field.js": "a660f7a6a5",
-        "arena.js": "3e2ec5fbfc",
+        "arena.js": "ecac8518ec",
         "mail.css": "445351ece3",
         "mail.js": "eb0bd95955",
         "worldmap.css": "c391a0037c",
-        "worldmap.js": "04c0a81b9e",
+        "worldmap.js": "6d34c41f1d",
         "minimap.css": "c07fd83190",
-        "minimap.js": "579b4be0ae",
-        "news.js": "ccd855e51a",
+        "minimap.js": "9c151b3b8b",
+        "news.js": "a93dcc72cf",
         "news.css": "0e6cf0e562",
         "skills.js": "2e3f9a9a10",
         "skills.css": "127fb08d28",
@@ -6262,7 +6246,7 @@
         "guildicons.js": "12efdbba35",
         "guildraid.js": "13b671d75a",
         "guildraid.css": "a421fbb323",
-        "guildrun.js": "5db5519bed",
+        "guildrun.js": "67cb4a5f05",
         "guildrun.css": "96d8e647ab",
         "citymon.css": "8257160db6"
       },
@@ -6270,19 +6254,19 @@
         "fair": "289d58dba7",
         "map": "5c68c6dcbb",
         "art": "b506a7093e",
-        "js": "dd2642aa45",
+        "js": "e9a47f363a",
         "st": "bcb43457c5",
         "css": "926b58960c",
         "gl": "31193a941a",
         "cb": "0a7aded76b",
-        "bk": "7ade53a243",
+        "bk": "95db87963b",
         "pixi": "pixi-8.22.0.min.js?v=2aa2cb408b",
         "pixiEval": "pixi-unsafe-eval-8.22.0.min.js?v=e5a56929e9",
         "font": "russo-one.woff?v=fc0283b9f8",
         "au": "59ff7d4b24",
         "auc": "c4c009ec88",
         "ig": "ff82d71a4a",
-        "sc": "2b2595285f",
+        "sc": "e1405f9b87",
         "tr": "e377f79976",
         "tg": "142dcf55af",
         "ta": "2c63f6c0af",
@@ -6303,7 +6287,7 @@
         "ma": "0b23b281f9",
         "mb": "0e5e20b435",
         "sa": "67e818afca",
-        "mj": "b68144db3a",
+        "mj": "8c8b792cec",
         "mc": "2d26d1f58a"
       },
       "LG_QV": {
@@ -6318,7 +6302,7 @@
         "dg": "c241d90567"
       },
       "LG_WORLDV": {
-        "js": "04c0a81b9e",
+        "js": "6d34c41f1d",
         "css": "c391a0037c",
         "geo": "G5-QsC99Grzh",
         "ak": "6f3328710e",
@@ -6336,10 +6320,10 @@
         "css": "70f2db1943"
       },
       "LG_FRV": {
-        "js": "ac78ad9ced",
+        "js": "6aabbd1341",
         "css": "0ef9d1170e"
       },
-      "LG_ONEV": "1d7c69ce6c",
+      "LG_ONEV": "5bd64812be",
       "LG_DMV": "53dd21a1fd"
     },
     "exx1dae": {
@@ -6347,7 +6331,7 @@
         "warcmd.css": "991a25365c",
         "warcmd.js": "08b1252d20",
         "season.css": "8936d6ccaf",
-        "season.js": "4d1d48ed85",
+        "season.js": "aabd21147c",
         "city.css": "926b58960c",
         "cityshop.css": "e257862b9c",
         "citystore.css": "7aee70b43b",
@@ -6364,7 +6348,7 @@
         "cityart.js": "b506a7093e",
         "citygl.js": "31193a941a",
         "itemgrid.js": "ff82d71a4a",
-        "/lib/site-chat.js": "2b2595285f",
+        "/lib/site-chat.js": "e1405f9b87",
         "citystore.js": "bcb43457c5",
         "cityshop.js": "2b34c4e8b4",
         "b-forge.js": "4066452ba8",
@@ -6374,12 +6358,12 @@
         "b-hall.js": "cfbf415874",
         "b-board.js": "ca027b09f5",
         "b-trainer.js": "c8c5ca8e6a",
-        "city.js": "dd2642aa45",
+        "city.js": "e9a47f363a",
         "trade.js": "e377f79976",
-        "guildhall.js": "fdb403a66e",
+        "guildhall.js": "05cbe7d01a",
         "emblems.js": "c7463d84ea",
-        "guilds.js": "4426b1a479",
-        "citymon.js": "5dab1f5630",
+        "guilds.js": "99a8fdb368",
+        "citymon.js": "722ca2f571",
         "quest.css": "d777f895d7",
         "q/crowdcam.js": "c9de7e0693",
         "q/battlecrowd.js": "82b5f3660e",
@@ -6388,22 +6372,22 @@
         "mine.css": "2d26d1f58a",
         "craftworld.js": "7d239df397",
         "mine-art.js": "0b23b281f9",
-        "mine.js": "b68144db3a",
+        "mine.js": "8c8b792cec",
         "craft.css": "5e0415fa1a",
         "craft.js": "a1d434fddc",
         "fish2.css": "ed2f4e6f8d",
         "fish2.js": "9b1cede77e",
         "arena-field.css": "7fa6cfe5d7",
-        "arena.css": "f33d27149d",
+        "arena.css": "3cd4536648",
         "arena-field.js": "a660f7a6a5",
-        "arena.js": "3e2ec5fbfc",
+        "arena.js": "ecac8518ec",
         "mail.css": "445351ece3",
         "mail.js": "eb0bd95955",
         "worldmap.css": "c391a0037c",
-        "worldmap.js": "04c0a81b9e",
+        "worldmap.js": "6d34c41f1d",
         "minimap.css": "c07fd83190",
-        "minimap.js": "579b4be0ae",
-        "news.js": "ccd855e51a",
+        "minimap.js": "9c151b3b8b",
+        "news.js": "a93dcc72cf",
         "news.css": "0e6cf0e562",
         "skills.js": "2e3f9a9a10",
         "skills.css": "127fb08d28",
@@ -6411,7 +6395,7 @@
         "guildicons.js": "12efdbba35",
         "guildraid.js": "13b671d75a",
         "guildraid.css": "a421fbb323",
-        "guildrun.js": "5db5519bed",
+        "guildrun.js": "67cb4a5f05",
         "guildrun.css": "96d8e647ab",
         "citymon.css": "8257160db6"
       },
@@ -6419,19 +6403,19 @@
         "fair": "e7394003b2",
         "map": "5c68c6dcbb",
         "art": "b506a7093e",
-        "js": "dd2642aa45",
+        "js": "e9a47f363a",
         "st": "bcb43457c5",
         "css": "926b58960c",
         "gl": "31193a941a",
         "cb": "0a7aded76b",
-        "bk": "7ade53a243",
+        "bk": "95db87963b",
         "pixi": "pixi-8.22.0.min.js?v=2aa2cb408b",
         "pixiEval": "pixi-unsafe-eval-8.22.0.min.js?v=e5a56929e9",
         "font": "russo-one.woff?v=fc0283b9f8",
         "au": "59ff7d4b24",
         "auc": "c4c009ec88",
         "ig": "ff82d71a4a",
-        "sc": "2b2595285f",
+        "sc": "e1405f9b87",
         "tr": "e377f79976",
         "tg": "142dcf55af",
         "ta": "2c63f6c0af",
@@ -6452,7 +6436,7 @@
         "ma": "0b23b281f9",
         "mb": "0e5e20b435",
         "sa": "67e818afca",
-        "mj": "b68144db3a",
+        "mj": "8c8b792cec",
         "mc": "2d26d1f58a"
       },
       "LG_QV": {
@@ -6467,7 +6451,7 @@
         "dg": "c241d90567"
       },
       "LG_WORLDV": {
-        "js": "04c0a81b9e",
+        "js": "6d34c41f1d",
         "css": "c391a0037c",
         "geo": "G5-QsC99Grzh",
         "ak": "6f3328710e",
@@ -6485,10 +6469,10 @@
         "css": "70f2db1943"
       },
       "LG_FRV": {
-        "js": "ac78ad9ced",
+        "js": "6aabbd1341",
         "css": "0ef9d1170e"
       },
-      "LG_ONEV": "1d7c69ce6c",
+      "LG_ONEV": "5bd64812be",
       "LG_DMV": "53dd21a1fd"
     },
     "5opka": {
@@ -6496,7 +6480,7 @@
         "warcmd.css": "991a25365c",
         "warcmd.js": "08b1252d20",
         "season.css": "8936d6ccaf",
-        "season.js": "4d1d48ed85",
+        "season.js": "aabd21147c",
         "city.css": "926b58960c",
         "cityshop.css": "e257862b9c",
         "citystore.css": "7aee70b43b",
@@ -6513,7 +6497,7 @@
         "cityart.js": "b506a7093e",
         "citygl.js": "31193a941a",
         "itemgrid.js": "ff82d71a4a",
-        "/lib/site-chat.js": "2b2595285f",
+        "/lib/site-chat.js": "e1405f9b87",
         "citystore.js": "bcb43457c5",
         "cityshop.js": "2b34c4e8b4",
         "b-forge.js": "4066452ba8",
@@ -6523,12 +6507,12 @@
         "b-hall.js": "cfbf415874",
         "b-board.js": "ca027b09f5",
         "b-trainer.js": "c8c5ca8e6a",
-        "city.js": "dd2642aa45",
+        "city.js": "e9a47f363a",
         "trade.js": "e377f79976",
-        "guildhall.js": "fdb403a66e",
+        "guildhall.js": "05cbe7d01a",
         "emblems.js": "c7463d84ea",
-        "guilds.js": "4426b1a479",
-        "citymon.js": "5dab1f5630",
+        "guilds.js": "99a8fdb368",
+        "citymon.js": "722ca2f571",
         "quest.css": "d777f895d7",
         "q/crowdcam.js": "c9de7e0693",
         "q/battlecrowd.js": "82b5f3660e",
@@ -6537,22 +6521,22 @@
         "mine.css": "2d26d1f58a",
         "craftworld.js": "7d239df397",
         "mine-art.js": "0b23b281f9",
-        "mine.js": "b68144db3a",
+        "mine.js": "8c8b792cec",
         "craft.css": "5e0415fa1a",
         "craft.js": "a1d434fddc",
         "fish2.css": "ed2f4e6f8d",
         "fish2.js": "9b1cede77e",
         "arena-field.css": "7fa6cfe5d7",
-        "arena.css": "f33d27149d",
+        "arena.css": "3cd4536648",
         "arena-field.js": "a660f7a6a5",
-        "arena.js": "3e2ec5fbfc",
+        "arena.js": "ecac8518ec",
         "mail.css": "445351ece3",
         "mail.js": "eb0bd95955",
         "worldmap.css": "c391a0037c",
-        "worldmap.js": "04c0a81b9e",
+        "worldmap.js": "6d34c41f1d",
         "minimap.css": "c07fd83190",
-        "minimap.js": "579b4be0ae",
-        "news.js": "ccd855e51a",
+        "minimap.js": "9c151b3b8b",
+        "news.js": "a93dcc72cf",
         "news.css": "0e6cf0e562",
         "skills.js": "2e3f9a9a10",
         "skills.css": "127fb08d28",
@@ -6560,7 +6544,7 @@
         "guildicons.js": "12efdbba35",
         "guildraid.js": "13b671d75a",
         "guildraid.css": "a421fbb323",
-        "guildrun.js": "5db5519bed",
+        "guildrun.js": "67cb4a5f05",
         "guildrun.css": "96d8e647ab",
         "citymon.css": "8257160db6"
       },
@@ -6568,19 +6552,19 @@
         "fair": "289d58dba7",
         "map": "5c68c6dcbb",
         "art": "b506a7093e",
-        "js": "dd2642aa45",
+        "js": "e9a47f363a",
         "st": "bcb43457c5",
         "css": "926b58960c",
         "gl": "31193a941a",
         "cb": "0a7aded76b",
-        "bk": "7ade53a243",
+        "bk": "95db87963b",
         "pixi": "pixi-8.22.0.min.js?v=2aa2cb408b",
         "pixiEval": "pixi-unsafe-eval-8.22.0.min.js?v=e5a56929e9",
         "font": "russo-one.woff?v=fc0283b9f8",
         "au": "59ff7d4b24",
         "auc": "c4c009ec88",
         "ig": "ff82d71a4a",
-        "sc": "2b2595285f",
+        "sc": "e1405f9b87",
         "tr": "e377f79976",
         "tg": "142dcf55af",
         "ta": "2c63f6c0af",
@@ -6601,7 +6585,7 @@
         "ma": "0b23b281f9",
         "mb": "0e5e20b435",
         "sa": "67e818afca",
-        "mj": "b68144db3a",
+        "mj": "8c8b792cec",
         "mc": "2d26d1f58a"
       },
       "LG_QV": {
@@ -6616,7 +6600,7 @@
         "dg": "c241d90567"
       },
       "LG_WORLDV": {
-        "js": "04c0a81b9e",
+        "js": "6d34c41f1d",
         "css": "c391a0037c",
         "geo": "G5-QsC99Grzh",
         "ak": "6f3328710e",
@@ -6634,10 +6618,10 @@
         "css": "70f2db1943"
       },
       "LG_FRV": {
-        "js": "ac78ad9ced",
+        "js": "6aabbd1341",
         "css": "0ef9d1170e"
       },
-      "LG_ONEV": "1d7c69ce6c",
+      "LG_ONEV": "5bd64812be",
       "LG_DMV": "53dd21a1fd"
     }
   },
@@ -6740,32 +6724,32 @@
     },
     "/site/season.js": {
       "path": "/site/season.js",
-      "version": "4d1d48ed85",
-      "request": "/site/season.js?v=4d1d48ed85",
+      "version": "aabd21147c",
+      "request": "/site/season.js?v=aabd21147c",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "season.js",
-          "version": "4d1d48ed85",
+          "version": "aabd21147c",
           "channel": "5opka"
         }
       ]
@@ -7392,56 +7376,56 @@
     },
     "/lib/site-chat.js": {
       "path": "/lib/site-chat.js",
-      "version": "2b2595285f",
-      "request": "/lib/site-chat.js?v=2b2595285f",
+      "version": "e1405f9b87",
+      "request": "/lib/site-chat.js?v=e1405f9b87",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "/lib/site-chat.js",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "sc",
-          "version": "2b2595285f",
+          "version": "e1405f9b87",
           "channel": "5opka"
         }
       ]
@@ -7760,56 +7744,56 @@
     },
     "/site/city.js": {
       "path": "/site/city.js",
-      "version": "dd2642aa45",
-      "request": "/site/city.js?v=dd2642aa45",
+      "version": "e9a47f363a",
+      "request": "/site/city.js?v=e9a47f363a",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "city.js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "js",
-          "version": "dd2642aa45",
+          "version": "e9a47f363a",
           "channel": "5opka"
         }
       ]
@@ -7872,32 +7856,32 @@
     },
     "/site/guildhall.js": {
       "path": "/site/guildhall.js",
-      "version": "fdb403a66e",
-      "request": "/site/guildhall.js?v=fdb403a66e",
+      "version": "05cbe7d01a",
+      "request": "/site/guildhall.js?v=05cbe7d01a",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "guildhall.js",
-          "version": "fdb403a66e",
+          "version": "05cbe7d01a",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "guildhall.js",
-          "version": "fdb403a66e",
+          "version": "05cbe7d01a",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "guildhall.js",
-          "version": "fdb403a66e",
+          "version": "05cbe7d01a",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "guildhall.js",
-          "version": "fdb403a66e",
+          "version": "05cbe7d01a",
           "channel": "5opka"
         }
       ]
@@ -7936,64 +7920,64 @@
     },
     "/site/guilds.js": {
       "path": "/site/guilds.js",
-      "version": "4426b1a479",
-      "request": "/site/guilds.js?v=4426b1a479",
+      "version": "99a8fdb368",
+      "request": "/site/guilds.js?v=99a8fdb368",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "guilds.js",
-          "version": "4426b1a479",
+          "version": "99a8fdb368",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "guilds.js",
-          "version": "4426b1a479",
+          "version": "99a8fdb368",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "guilds.js",
-          "version": "4426b1a479",
+          "version": "99a8fdb368",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "guilds.js",
-          "version": "4426b1a479",
+          "version": "99a8fdb368",
           "channel": "5opka"
         }
       ]
     },
     "/site/citymon.js": {
       "path": "/site/citymon.js",
-      "version": "5dab1f5630",
-      "request": "/site/citymon.js?v=5dab1f5630",
+      "version": "722ca2f571",
+      "request": "/site/citymon.js?v=722ca2f571",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "citymon.js",
-          "version": "5dab1f5630",
+          "version": "722ca2f571",
           "channel": "5opka"
         }
       ]
@@ -8448,56 +8432,56 @@
     },
     "/site/mine.js": {
       "path": "/site/mine.js",
-      "version": "b68144db3a",
-      "request": "/site/mine.js?v=b68144db3a",
+      "version": "8c8b792cec",
+      "request": "/site/mine.js?v=8c8b792cec",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "mine.js",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         },
         {
           "map": "LG_CITYV",
           "key": "mj",
-          "version": "b68144db3a",
+          "version": "8c8b792cec",
           "channel": "5opka"
         }
       ]
@@ -8664,32 +8648,32 @@
     },
     "/site/arena.css": {
       "path": "/site/arena.css",
-      "version": "f33d27149d",
-      "request": "/site/arena.css?v=f33d27149d",
+      "version": "3cd4536648",
+      "request": "/site/arena.css?v=3cd4536648",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.css",
-          "version": "f33d27149d",
+          "version": "3cd4536648",
           "channel": "5opka"
         }
       ]
@@ -8728,32 +8712,32 @@
     },
     "/site/arena.js": {
       "path": "/site/arena.js",
-      "version": "3e2ec5fbfc",
-      "request": "/site/arena.js?v=3e2ec5fbfc",
+      "version": "ecac8518ec",
+      "request": "/site/arena.js?v=ecac8518ec",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "arena.js",
-          "version": "3e2ec5fbfc",
+          "version": "ecac8518ec",
           "channel": "5opka"
         }
       ]
@@ -8880,56 +8864,56 @@
     },
     "/site/worldmap.js": {
       "path": "/site/worldmap.js",
-      "version": "04c0a81b9e",
-      "request": "/site/worldmap.js?v=04c0a81b9e",
+      "version": "6d34c41f1d",
+      "request": "/site/worldmap.js?v=6d34c41f1d",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "worldmap.js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         },
         {
           "map": "LG_WORLDV",
           "key": "js",
-          "version": "04c0a81b9e",
+          "version": "6d34c41f1d",
           "channel": "5opka"
         }
       ]
@@ -8968,64 +8952,64 @@
     },
     "/site/minimap.js": {
       "path": "/site/minimap.js",
-      "version": "579b4be0ae",
-      "request": "/site/minimap.js?v=579b4be0ae",
+      "version": "9c151b3b8b",
+      "request": "/site/minimap.js?v=9c151b3b8b",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "minimap.js",
-          "version": "579b4be0ae",
+          "version": "9c151b3b8b",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "minimap.js",
-          "version": "579b4be0ae",
+          "version": "9c151b3b8b",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "minimap.js",
-          "version": "579b4be0ae",
+          "version": "9c151b3b8b",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "minimap.js",
-          "version": "579b4be0ae",
+          "version": "9c151b3b8b",
           "channel": "5opka"
         }
       ]
     },
     "/site/news.js": {
       "path": "/site/news.js",
-      "version": "ccd855e51a",
-      "request": "/site/news.js?v=ccd855e51a",
+      "version": "a93dcc72cf",
+      "request": "/site/news.js?v=a93dcc72cf",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "news.js",
-          "version": "ccd855e51a",
+          "version": "a93dcc72cf",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "news.js",
-          "version": "ccd855e51a",
+          "version": "a93dcc72cf",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "news.js",
-          "version": "ccd855e51a",
+          "version": "a93dcc72cf",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "news.js",
-          "version": "ccd855e51a",
+          "version": "a93dcc72cf",
           "channel": "5opka"
         }
       ]
@@ -9256,32 +9240,32 @@
     },
     "/site/guildrun.js": {
       "path": "/site/guildrun.js",
-      "version": "5db5519bed",
-      "request": "/site/guildrun.js?v=5db5519bed",
+      "version": "67cb4a5f05",
+      "request": "/site/guildrun.js?v=67cb4a5f05",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_SITEF",
           "key": "guildrun.js",
-          "version": "5db5519bed",
+          "version": "67cb4a5f05",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_SITEF",
           "key": "guildrun.js",
-          "version": "5db5519bed",
+          "version": "67cb4a5f05",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_SITEF",
           "key": "guildrun.js",
-          "version": "5db5519bed",
+          "version": "67cb4a5f05",
           "channel": "exx1dae"
         },
         {
           "map": "LG_SITEF",
           "key": "guildrun.js",
-          "version": "5db5519bed",
+          "version": "67cb4a5f05",
           "channel": "5opka"
         }
       ]
@@ -9860,32 +9844,32 @@
     },
     "/site/friends.js": {
       "path": "/site/friends.js",
-      "version": "ac78ad9ced",
-      "request": "/site/friends.js?v=ac78ad9ced",
+      "version": "6aabbd1341",
+      "request": "/site/friends.js?v=6aabbd1341",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_FRV",
           "key": "js",
-          "version": "ac78ad9ced",
+          "version": "6aabbd1341",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_FRV",
           "key": "js",
-          "version": "ac78ad9ced",
+          "version": "6aabbd1341",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_FRV",
           "key": "js",
-          "version": "ac78ad9ced",
+          "version": "6aabbd1341",
           "channel": "exx1dae"
         },
         {
           "map": "LG_FRV",
           "key": "js",
-          "version": "ac78ad9ced",
+          "version": "6aabbd1341",
           "channel": "5opka"
         }
       ]
@@ -9924,32 +9908,32 @@
     },
     "/lib/site-chatone.js": {
       "path": "/lib/site-chatone.js",
-      "version": "1d7c69ce6c",
-      "request": "/lib/site-chatone.js?v=1d7c69ce6c",
+      "version": "5bd64812be",
+      "request": "/lib/site-chatone.js?v=5bd64812be",
       "source": "version-map",
       "sources": [
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielchannel"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "zakvielnight"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "exx1dae"
         },
         {
           "map": "LG_ONEV",
           "key": "value",
-          "version": "1d7c69ce6c",
+          "version": "5bd64812be",
           "channel": "5opka"
         }
       ]
@@ -10136,7 +10120,7 @@
       "path": "/site/ver",
       "status": 200,
       "size": 18,
-      "sha256": "a1a8cb3afd5c15d734a74cd4f95ff3275eb3b1809c9a46b70451eddd2ad30c9e",
+      "sha256": "5e48a50474877ab90a4d74f7c3a784025d6d8ee244d7c331a91ab4a3a4e65580",
       "etag": "",
       "content_type": "application/json; charset=utf-8",
       "source": "seed",
@@ -10150,9 +10134,9 @@
     {
       "path": "/site/app.js",
       "status": 200,
-      "size": 338746,
-      "sha256": "9f4673861d775dbc65d6a3bb6aeb45a0fdc72475dacd91c0c59e06cd1a4ad984",
-      "etag": "f1cf8895b3",
+      "size": 338964,
+      "sha256": "e37e974f77c7a9d80e49f4ee648ae201ac223d02f09d113a82ed51b313abb752",
+      "etag": "e037e18ea5",
       "content_type": "text/javascript; charset=utf-8",
       "source": "seed",
       "request_url": "https://legiongame.gg/site/app.js",
@@ -10480,12 +10464,12 @@
     {
       "path": "/site/news.js",
       "status": 200,
-      "size": 35749,
-      "sha256": "fbeedc38ae408ed817be4564e7ea0b1de2fe406a583d7053fd7feaf22ca2d5a4",
-      "etag": "ccd855e51a-c",
+      "size": 35830,
+      "sha256": "c5fa3aeb6bd220a7c988e0df20b177539e3904cecc01a2dbd034f6f97edf7990",
+      "etag": "a93dcc72cf-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/news.js?v=ccd855e51a",
+      "request_url": "https://legiongame.gg/site/news.js?v=a93dcc72cf",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -10705,9 +10689,9 @@
     {
       "path": "/lib/site-ui.js",
       "status": 200,
-      "size": 28583,
-      "sha256": "993ccbc5db880685a21aabecf80693d6b5a83d4e90e0797d0b5375536ab3f90d",
-      "etag": "5f38e70f31-c",
+      "size": 29091,
+      "sha256": "890b03373425f2dc3342ba975b03a8c494d4b4f8a944ca95f39aa9c3de0f2bbe",
+      "etag": "a66c345335-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "seed",
       "request_url": "https://legiongame.gg/lib/site-ui.js",
@@ -11441,7 +11425,7 @@
       "path": "/c/zakvielchannel/",
       "status": 200,
       "size": 7866,
-      "sha256": "5b6c136e5585bdc256d79875bdbe67968ca4740806e110300054cf753de1cac7",
+      "sha256": "39b710e71f2ebd77a3d5e08574e5c85c5f2b268ee582bcb5c7d4ecd74ad34a79",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -11456,7 +11440,7 @@
       "path": "/c/zakvielnight/",
       "status": 200,
       "size": 7856,
-      "sha256": "1f52de92f116697b142dfdc72821c0cb10d5bca6afecae94865d3404830f7303",
+      "sha256": "eaf849d6c7822450957f521c6748daa81260a151813f7a0e2d62c6d11ad4fef1",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -11471,7 +11455,7 @@
       "path": "/c/exx1dae/",
       "status": 200,
       "size": 7826,
-      "sha256": "c2ad1a47912d1d0bf731bdbc49c7136f668a3a31598c21ee057086928dfa06e0",
+      "sha256": "23ef8decdf5e83dfaf7bc1f9ba99cea6750d9d07364db79954fee170b73891d1",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -11486,7 +11470,7 @@
       "path": "/c/5opka/",
       "status": 200,
       "size": 7814,
-      "sha256": "d91f2ae1ec814d8c9b29f0560704e029b1363ef2152dce751cf500b2f005927a",
+      "sha256": "4565588e5167eeceb736e92edcb4bec01c17141a46fc89cf2f1e05167cc648fe",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -18145,12 +18129,12 @@
     {
       "path": "/site/guildhall.js",
       "status": 200,
-      "size": 133766,
-      "sha256": "2e90535476831edee4e5dee396f66e0f08a71de6662af26474b4e0b4ada1130c",
-      "etag": "fdb403a66e",
+      "size": 133935,
+      "sha256": "a5acc3461b2f9c2f0587ba255b35a4cb928a848d7d0d6895fcf7b5f2cb898652",
+      "etag": "05cbe7d01a",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guildhall.js?v=fdb403a66e",
+      "request_url": "https://legiongame.gg/site/guildhall.js?v=05cbe7d01a",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -18175,12 +18159,12 @@
     {
       "path": "/site/guilds.js",
       "status": 200,
-      "size": 126017,
-      "sha256": "7f260fe7309235d0d84a944967c7f30c1e171d521a12497b78a7466c2aa2acb1",
-      "etag": "4426b1a479-c",
+      "size": 126287,
+      "sha256": "d4c91d6347658ab90392b2a3b691eac69a7cb8305f123f4cd254294f46f73b6e",
+      "etag": "99a8fdb368-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guilds.js?v=4426b1a479",
+      "request_url": "https://legiongame.gg/site/guilds.js?v=99a8fdb368",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -18415,12 +18399,12 @@
     {
       "path": "/site/minimap.js",
       "status": 200,
-      "size": 36163,
-      "sha256": "7cb53b48774016a404ee179f38c669ffcbe879e92eda80eb5101d3ac54b6d379",
-      "etag": "579b4be0ae-c",
+      "size": 36312,
+      "sha256": "55b79568de028a9e6841d0773a206293b8fc92048e23342fe761df3ac6be0d02",
+      "etag": "9c151b3b8b-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/minimap.js?v=579b4be0ae",
+      "request_url": "https://legiongame.gg/site/minimap.js?v=9c151b3b8b",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -18505,12 +18489,12 @@
     {
       "path": "/site/guildrun.js",
       "status": 200,
-      "size": 34033,
-      "sha256": "d407294d180a8daf1bdb65bda3c10b1228b3ce3428b03941a6b75fd5525abd98",
-      "etag": "5db5519bed-c",
+      "size": 34126,
+      "sha256": "add260fe8224b8710743814a4e47cc34fcf8192edd578d3afb705b055df391f6",
+      "etag": "67cb4a5f05-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guildrun.js?v=5db5519bed",
+      "request_url": "https://legiongame.gg/site/guildrun.js?v=67cb4a5f05",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -18595,12 +18579,12 @@
     {
       "path": "/site/friends.js",
       "status": 200,
-      "size": 17516,
-      "sha256": "2ba879d946669b884e636e500b1a3046f54df66be60e6479261c0a313afa9796",
-      "etag": "ac78ad9ced-c",
+      "size": 17572,
+      "sha256": "ed3520902f2401eb555355dd24930324c0b79033c5cd4f41f16f0418bb5bf19b",
+      "etag": "6aabbd1341-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/friends.js?v=ac78ad9ced",
+      "request_url": "https://legiongame.gg/site/friends.js?v=6aabbd1341",
       "error": "",
       "response_preview": "",
       "server": "",
@@ -18653,51 +18637,6 @@
       "retry_after": ""
     },
     {
-      "path": "/site/newssite.css",
-      "status": 404,
-      "size": 0,
-      "sha256": "",
-      "etag": "",
-      "content_type": "",
-      "source": "ref-cache",
-      "request_url": "https://legiongame.gg/site/newssite.css",
-      "error": "cached stable HTTP 404",
-      "response_preview": "",
-      "server": "",
-      "via": "",
-      "retry_after": ""
-    },
-    {
-      "path": "/site/newssite.js",
-      "status": 404,
-      "size": 0,
-      "sha256": "",
-      "etag": "",
-      "content_type": "",
-      "source": "ref-cache",
-      "request_url": "https://legiongame.gg/site/newssite.js",
-      "error": "cached stable HTTP 404",
-      "response_preview": "",
-      "server": "",
-      "via": "",
-      "retry_after": ""
-    },
-    {
-      "path": "/site/worldgeo.json",
-      "status": 404,
-      "size": 0,
-      "sha256": "",
-      "etag": "",
-      "content_type": "",
-      "source": "ref-cache",
-      "request_url": "https://legiongame.gg/site/worldgeo.json",
-      "error": "cached stable HTTP 404",
-      "response_preview": "",
-      "server": "",
-      "via": "",
-      "retry_after": ""
-    },
-    {
       "path": "/site/tk-city.js",
       "status": 200,
       "size": 2853,
@@ -18730,9 +18669,9 @@
     {
       "path": "/site/dailies.js",
       "status": 200,
-      "size": 16467,
-      "sha256": "ce6f6f0538b120fb44021c10b5fa4d41dcc2f076d3454d9a39bdd8d9582e7459",
-      "etag": "143e1ccee8-c",
+      "size": 16545,
+      "sha256": "0f3ee8d2e63a5fd2f8b780e235817b9b2177f5076393f5b94516f2b5e5e1352c",
+      "etag": "756e70bb66-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "ref",
       "request_url": "https://legiongame.gg/site/dailies.js",
@@ -18893,6 +18832,36 @@
       "retry_after": ""
     },
     {
+      "path": "/site/newssite.css",
+      "status": 404,
+      "size": 17,
+      "sha256": "",
+      "etag": "",
+      "content_type": "text/plain; charset=utf-8",
+      "source": "ref",
+      "request_url": "https://legiongame.gg/site/newssite.css",
+      "error": "",
+      "response_preview": "Нет файла",
+      "server": "",
+      "via": "",
+      "retry_after": ""
+    },
+    {
+      "path": "/site/newssite.js",
+      "status": 404,
+      "size": 17,
+      "sha256": "",
+      "etag": "",
+      "content_type": "text/plain; charset=utf-8",
+      "source": "ref",
+      "request_url": "https://legiongame.gg/site/newssite.js",
+      "error": "",
+      "response_preview": "Нет файла",
+      "server": "",
+      "via": "",
+      "retry_after": ""
+    },
+    {
       "path": "/site/favicon.svg",
       "status": 200,
       "size": 7990,
@@ -18966,12 +18935,27 @@
       "server": "",
       "via": "",
       "retry_after": ""
+    },
+    {
+      "path": "/site/worldgeo.json",
+      "status": 404,
+      "size": 17,
+      "sha256": "",
+      "etag": "",
+      "content_type": "text/plain; charset=utf-8",
+      "source": "ref",
+      "request_url": "https://legiongame.gg/site/worldgeo.json",
+      "error": "",
+      "response_preview": "Нет файла",
+      "server": "",
+      "via": "",
+      "retry_after": ""
     }
   ],
   "files": {
     "/site/ver": {
       "size": 18,
-      "sha256": "a1a8cb3afd5c15d734a74cd4f95ff3275eb3b1809c9a46b70451eddd2ad30c9e",
+      "sha256": "5e48a50474877ab90a4d74f7c3a784025d6d8ee244d7c331a91ab4a3a4e65580",
       "etag": "",
       "content_type": "application/json; charset=utf-8",
       "source": "seed",
@@ -18979,9 +18963,9 @@
       "stored_as": "site/ver"
     },
     "/site/app.js": {
-      "size": 338746,
-      "sha256": "9f4673861d775dbc65d6a3bb6aeb45a0fdc72475dacd91c0c59e06cd1a4ad984",
-      "etag": "f1cf8895b3",
+      "size": 338964,
+      "sha256": "e37e974f77c7a9d80e49f4ee648ae201ac223d02f09d113a82ed51b313abb752",
+      "etag": "e037e18ea5",
       "content_type": "text/javascript; charset=utf-8",
       "source": "seed",
       "request_url": "https://legiongame.gg/site/app.js",
@@ -19078,12 +19062,12 @@
       "stored_as": "site/campart.js"
     },
     "/site/news.js": {
-      "size": 35749,
-      "sha256": "fbeedc38ae408ed817be4564e7ea0b1de2fe406a583d7053fd7feaf22ca2d5a4",
-      "etag": "ccd855e51a-c",
+      "size": 35830,
+      "sha256": "c5fa3aeb6bd220a7c988e0df20b177539e3904cecc01a2dbd034f6f97edf7990",
+      "etag": "a93dcc72cf-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/news.js?v=ccd855e51a",
+      "request_url": "https://legiongame.gg/site/news.js?v=a93dcc72cf",
       "stored_as": "site/news.js"
     },
     "/site/lore.js": {
@@ -19159,9 +19143,9 @@
       "stored_as": "lib/world.js"
     },
     "/lib/site-ui.js": {
-      "size": 28583,
-      "sha256": "993ccbc5db880685a21aabecf80693d6b5a83d4e90e0797d0b5375536ab3f90d",
-      "etag": "5f38e70f31-c",
+      "size": 29091,
+      "sha256": "890b03373425f2dc3342ba975b03a8c494d4b4f8a944ca95f39aa9c3de0f2bbe",
+      "etag": "a66c345335-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "seed",
       "request_url": "https://legiongame.gg/lib/site-ui.js",
@@ -19484,7 +19468,7 @@
     },
     "/c/zakvielchannel/": {
       "size": 7866,
-      "sha256": "5b6c136e5585bdc256d79875bdbe67968ca4740806e110300054cf753de1cac7",
+      "sha256": "39b710e71f2ebd77a3d5e08574e5c85c5f2b268ee582bcb5c7d4ecd74ad34a79",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -19493,7 +19477,7 @@
     },
     "/c/zakvielnight/": {
       "size": 7856,
-      "sha256": "1f52de92f116697b142dfdc72821c0cb10d5bca6afecae94865d3404830f7303",
+      "sha256": "eaf849d6c7822450957f521c6748daa81260a151813f7a0e2d62c6d11ad4fef1",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -19502,7 +19486,7 @@
     },
     "/c/exx1dae/": {
       "size": 7826,
-      "sha256": "c2ad1a47912d1d0bf731bdbc49c7136f668a3a31598c21ee057086928dfa06e0",
+      "sha256": "23ef8decdf5e83dfaf7bc1f9ba99cea6750d9d07364db79954fee170b73891d1",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -19511,7 +19495,7 @@
     },
     "/c/5opka/": {
       "size": 7814,
-      "sha256": "d91f2ae1ec814d8c9b29f0560704e029b1363ef2152dce751cf500b2f005927a",
+      "sha256": "4565588e5167eeceb736e92edcb4bec01c17141a46fc89cf2f1e05167cc648fe",
       "etag": "",
       "content_type": "text/html; charset=utf-8",
       "source": "seed",
@@ -19537,12 +19521,12 @@
       "stored_as": "site/guilds.css"
     },
     "/site/guildhall.js": {
-      "size": 133766,
-      "sha256": "2e90535476831edee4e5dee396f66e0f08a71de6662af26474b4e0b4ada1130c",
-      "etag": "fdb403a66e",
+      "size": 133935,
+      "sha256": "a5acc3461b2f9c2f0587ba255b35a4cb928a848d7d0d6895fcf7b5f2cb898652",
+      "etag": "05cbe7d01a",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guildhall.js?v=fdb403a66e",
+      "request_url": "https://legiongame.gg/site/guildhall.js?v=05cbe7d01a",
       "stored_as": "site/guildhall.js"
     },
     "/site/emblems.js": {
@@ -19555,12 +19539,12 @@
       "stored_as": "site/emblems.js"
     },
     "/site/guilds.js": {
-      "size": 126017,
-      "sha256": "7f260fe7309235d0d84a944967c7f30c1e171d521a12497b78a7466c2aa2acb1",
-      "etag": "4426b1a479-c",
+      "size": 126287,
+      "sha256": "d4c91d6347658ab90392b2a3b691eac69a7cb8305f123f4cd254294f46f73b6e",
+      "etag": "99a8fdb368-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guilds.js?v=4426b1a479",
+      "request_url": "https://legiongame.gg/site/guilds.js?v=99a8fdb368",
       "stored_as": "site/guilds.js"
     },
     "/site/craft.css": {
@@ -19627,12 +19611,12 @@
       "stored_as": "site/minimap.css"
     },
     "/site/minimap.js": {
-      "size": 36163,
-      "sha256": "7cb53b48774016a404ee179f38c669ffcbe879e92eda80eb5101d3ac54b6d379",
-      "etag": "579b4be0ae-c",
+      "size": 36312,
+      "sha256": "55b79568de028a9e6841d0773a206293b8fc92048e23342fe761df3ac6be0d02",
+      "etag": "9c151b3b8b-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/minimap.js?v=579b4be0ae",
+      "request_url": "https://legiongame.gg/site/minimap.js?v=9c151b3b8b",
       "stored_as": "site/minimap.js"
     },
     "/site/news.css": {
@@ -19681,12 +19665,12 @@
       "stored_as": "site/guildraid.css"
     },
     "/site/guildrun.js": {
-      "size": 34033,
-      "sha256": "d407294d180a8daf1bdb65bda3c10b1228b3ce3428b03941a6b75fd5525abd98",
-      "etag": "5db5519bed-c",
+      "size": 34126,
+      "sha256": "add260fe8224b8710743814a4e47cc34fcf8192edd578d3afb705b055df391f6",
+      "etag": "67cb4a5f05-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/guildrun.js?v=5db5519bed",
+      "request_url": "https://legiongame.gg/site/guildrun.js?v=67cb4a5f05",
       "stored_as": "site/guildrun.js"
     },
     "/site/guildrun.css": {
@@ -19735,12 +19719,12 @@
       "stored_as": "site/start.css"
     },
     "/site/friends.js": {
-      "size": 17516,
-      "sha256": "2ba879d946669b884e636e500b1a3046f54df66be60e6479261c0a313afa9796",
-      "etag": "ac78ad9ced-c",
+      "size": 17572,
+      "sha256": "ed3520902f2401eb555355dd24930324c0b79033c5cd4f41f16f0418bb5bf19b",
+      "etag": "6aabbd1341-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "version-map",
-      "request_url": "https://legiongame.gg/site/friends.js?v=ac78ad9ced",
+      "request_url": "https://legiongame.gg/site/friends.js?v=6aabbd1341",
       "stored_as": "site/friends.js"
     },
     "/site/friends.css": {
@@ -19762,9 +19746,9 @@
       "stored_as": "site/tk-city.js"
     },
     "/site/dailies.js": {
-      "size": 16467,
-      "sha256": "ce6f6f0538b120fb44021c10b5fa4d41dcc2f076d3454d9a39bdd8d9582e7459",
-      "etag": "143e1ccee8-c",
+      "size": 16545,
+      "sha256": "0f3ee8d2e63a5fd2f8b780e235817b9b2177f5076393f5b94516f2b5e5e1352c",
+      "etag": "756e70bb66-c",
       "content_type": "text/javascript; charset=utf-8",
       "source": "ref",
       "request_url": "https://legiongame.gg/site/dailies.js",
@@ -20002,7 +19986,7 @@
   "published": true,
   "retained_previous_files": [],
   "scan_result": {
-    "complete": false,
+    "complete": true,
     "unavailable_versioned_assets": [
       {
         "path": "/site/warcmd.css",
@@ -20115,31 +20099,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/season.js?v=4d1d48ed85",
-        "version": "4d1d48ed85",
+        "request": "/site/season.js?v=aabd21147c",
+        "version": "aabd21147c",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "5opka"
           }
         ]
@@ -20571,55 +20555,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/lib/site-chat.js?v=2b2595285f",
-        "version": "2b2595285f",
+        "request": "/lib/site-chat.js?v=e1405f9b87",
+        "version": "e1405f9b87",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "5opka"
           }
         ]
@@ -20969,55 +20953,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/city.js?v=dd2642aa45",
-        "version": "dd2642aa45",
+        "request": "/site/city.js?v=e9a47f363a",
+        "version": "e9a47f363a",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "5opka"
           }
         ]
@@ -21087,31 +21071,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/citymon.js?v=5dab1f5630",
-        "version": "5dab1f5630",
+        "request": "/site/citymon.js?v=722ca2f571",
+        "version": "722ca2f571",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "5opka"
           }
         ]
@@ -21594,55 +21578,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/mine.js?v=b68144db3a",
-        "version": "b68144db3a",
+        "request": "/site/mine.js?v=8c8b792cec",
+        "version": "8c8b792cec",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "5opka"
           }
         ]
@@ -21688,31 +21672,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/arena.css?v=f33d27149d",
-        "version": "f33d27149d",
+        "request": "/site/arena.css?v=3cd4536648",
+        "version": "3cd4536648",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "5opka"
           }
         ]
@@ -21758,31 +21742,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/arena.js?v=3e2ec5fbfc",
-        "version": "3e2ec5fbfc",
+        "request": "/site/arena.js?v=ecac8518ec",
+        "version": "ecac8518ec",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "5opka"
           }
         ]
@@ -21852,55 +21836,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/worldmap.js?v=04c0a81b9e",
-        "version": "04c0a81b9e",
+        "request": "/site/worldmap.js?v=6d34c41f1d",
+        "version": "6d34c41f1d",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "exx1dae"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "5opka"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "5opka"
           }
         ]
@@ -22120,31 +22104,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/lib/site-chatone.js?v=1d7c69ce6c",
-        "version": "1d7c69ce6c",
+        "request": "/lib/site-chatone.js?v=5bd64812be",
+        "version": "5bd64812be",
         "sources": [
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "exx1dae"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "5opka"
           }
         ]
@@ -22421,27 +22405,11 @@
       "/site/worldmap.css",
       "/site/worldmap.js"
     ],
-    "actual_version": "13ebcdcfc1",
-    "expected_version": "13ebcdcfc1",
+    "actual_version": "86794a1329",
+    "expected_version": "86794a1329",
     "version_mismatch": false,
     "missing_required": [],
-    "failed_requests": [
-      {
-        "path": "/site/newssite.css",
-        "status": 404,
-        "error": "cached stable HTTP 404"
-      },
-      {
-        "path": "/site/newssite.js",
-        "status": 404,
-        "error": "cached stable HTTP 404"
-      },
-      {
-        "path": "/site/worldgeo.json",
-        "status": 404,
-        "error": "cached stable HTTP 404"
-      }
-    ],
+    "failed_requests": [],
     "denied_requests": [
       {
         "path": "/overlay/doodle.js",
@@ -22562,31 +22530,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/season.js?v=4d1d48ed85",
-        "version": "4d1d48ed85",
+        "request": "/site/season.js?v=aabd21147c",
+        "version": "aabd21147c",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "season.js",
-            "version": "4d1d48ed85",
+            "version": "aabd21147c",
             "channel": "5opka"
           }
         ]
@@ -23018,55 +22986,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/lib/site-chat.js?v=2b2595285f",
-        "version": "2b2595285f",
+        "request": "/lib/site-chat.js?v=e1405f9b87",
+        "version": "e1405f9b87",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "/lib/site-chat.js",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "sc",
-            "version": "2b2595285f",
+            "version": "e1405f9b87",
             "channel": "5opka"
           }
         ]
@@ -23416,55 +23384,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/city.js?v=dd2642aa45",
-        "version": "dd2642aa45",
+        "request": "/site/city.js?v=e9a47f363a",
+        "version": "e9a47f363a",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "city.js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "js",
-            "version": "dd2642aa45",
+            "version": "e9a47f363a",
             "channel": "5opka"
           }
         ]
@@ -23534,31 +23502,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/citymon.js?v=5dab1f5630",
-        "version": "5dab1f5630",
+        "request": "/site/citymon.js?v=722ca2f571",
+        "version": "722ca2f571",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "citymon.js",
-            "version": "5dab1f5630",
+            "version": "722ca2f571",
             "channel": "5opka"
           }
         ]
@@ -24041,55 +24009,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/mine.js?v=b68144db3a",
-        "version": "b68144db3a",
+        "request": "/site/mine.js?v=8c8b792cec",
+        "version": "8c8b792cec",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "mine.js",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "5opka"
           },
           {
             "map": "LG_CITYV",
             "key": "mj",
-            "version": "b68144db3a",
+            "version": "8c8b792cec",
             "channel": "5opka"
           }
         ]
@@ -24135,31 +24103,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/arena.css?v=f33d27149d",
-        "version": "f33d27149d",
+        "request": "/site/arena.css?v=3cd4536648",
+        "version": "3cd4536648",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.css",
-            "version": "f33d27149d",
+            "version": "3cd4536648",
             "channel": "5opka"
           }
         ]
@@ -24205,31 +24173,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/site/arena.js?v=3e2ec5fbfc",
-        "version": "3e2ec5fbfc",
+        "request": "/site/arena.js?v=ecac8518ec",
+        "version": "ecac8518ec",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "arena.js",
-            "version": "3e2ec5fbfc",
+            "version": "ecac8518ec",
             "channel": "5opka"
           }
         ]
@@ -24299,55 +24267,55 @@
         "source": "seed",
         "version_status": 404,
         "fallback_status": null,
-        "request": "/site/worldmap.js?v=04c0a81b9e",
-        "version": "04c0a81b9e",
+        "request": "/site/worldmap.js?v=6d34c41f1d",
+        "version": "6d34c41f1d",
         "sources": [
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "exx1dae"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "exx1dae"
           },
           {
             "map": "LG_SITEF",
             "key": "worldmap.js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "5opka"
           },
           {
             "map": "LG_WORLDV",
             "key": "js",
-            "version": "04c0a81b9e",
+            "version": "6d34c41f1d",
             "channel": "5opka"
           }
         ]
@@ -24567,31 +24535,31 @@
         "source": "version-fallback",
         "version_status": 404,
         "fallback_status": 404,
-        "request": "/lib/site-chatone.js?v=1d7c69ce6c",
-        "version": "1d7c69ce6c",
+        "request": "/lib/site-chatone.js?v=5bd64812be",
+        "version": "5bd64812be",
         "sources": [
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "zakvielchannel"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "zakvielnight"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "exx1dae"
           },
           {
             "map": "LG_ONEV",
             "key": "value",
-            "version": "1d7c69ce6c",
+            "version": "5bd64812be",
             "channel": "5opka"
           }
         ]
@@ -24812,7 +24780,7 @@
       "downloaded": 99,
       "not_found": 489,
       "denied": 1,
-      "failed": 3,
+      "failed": 0,
       "integrity_errors": 0,
       "versioned_expected": 100,
       "versioned_downloaded": 39,
@@ -24854,7 +24822,7 @@
       {
         "path": "/site/season.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/season.js?v=4d1d48ed85",
+        "request_url": "https://legiongame.gg/site/season.js?v=aabd21147c",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25007,7 +24975,7 @@
       {
         "path": "/lib/site-chat.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/lib/site-chat.js?v=2b2595285f",
+        "request_url": "https://legiongame.gg/lib/site-chat.js?v=e1405f9b87",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25097,7 +25065,7 @@
       {
         "path": "/site/city.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/city.js?v=dd2642aa45",
+        "request_url": "https://legiongame.gg/site/city.js?v=e9a47f363a",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25115,7 +25083,7 @@
       {
         "path": "/site/guildhall.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/guildhall.js?v=fdb403a66e",
+        "request_url": "https://legiongame.gg/site/guildhall.js?v=05cbe7d01a",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25133,7 +25101,7 @@
       {
         "path": "/site/guilds.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/guilds.js?v=4426b1a479",
+        "request_url": "https://legiongame.gg/site/guilds.js?v=99a8fdb368",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25142,7 +25110,7 @@
       {
         "path": "/site/citymon.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/citymon.js?v=5dab1f5630",
+        "request_url": "https://legiongame.gg/site/citymon.js?v=722ca2f571",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25223,7 +25191,7 @@
       {
         "path": "/site/mine.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/mine.js?v=b68144db3a",
+        "request_url": "https://legiongame.gg/site/mine.js?v=8c8b792cec",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25277,7 +25245,7 @@
       {
         "path": "/site/arena.css",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/arena.css?v=f33d27149d",
+        "request_url": "https://legiongame.gg/site/arena.css?v=3cd4536648",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25295,7 +25263,7 @@
       {
         "path": "/site/arena.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/arena.js?v=3e2ec5fbfc",
+        "request_url": "https://legiongame.gg/site/arena.js?v=ecac8518ec",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25331,7 +25299,7 @@
       {
         "path": "/site/worldmap.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/site/worldmap.js?v=04c0a81b9e",
+        "request_url": "https://legiongame.gg/site/worldmap.js?v=6d34c41f1d",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",
@@ -25349,7 +25317,7 @@
       {
         "path": "/site/minimap.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/minimap.js?v=579b4be0ae",
+        "request_url": "https://legiongame.gg/site/minimap.js?v=9c151b3b8b",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25358,7 +25326,7 @@
       {
         "path": "/site/news.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/news.js?v=ccd855e51a",
+        "request_url": "https://legiongame.gg/site/news.js?v=a93dcc72cf",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25430,7 +25398,7 @@
       {
         "path": "/site/guildrun.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/guildrun.js?v=5db5519bed",
+        "request_url": "https://legiongame.gg/site/guildrun.js?v=67cb4a5f05",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25610,7 +25578,7 @@
       {
         "path": "/site/friends.js",
         "status": 200,
-        "request_url": "https://legiongame.gg/site/friends.js?v=ac78ad9ced",
+        "request_url": "https://legiongame.gg/site/friends.js?v=6aabbd1341",
         "response_preview": "",
         "server": "",
         "via": "",
@@ -25628,7 +25596,7 @@
       {
         "path": "/lib/site-chatone.js",
         "status": 404,
-        "request_url": "https://legiongame.gg/lib/site-chatone.js?v=1d7c69ce6c",
+        "request_url": "https://legiongame.gg/lib/site-chatone.js?v=5bd64812be",
         "response_preview": "Нет файла",
         "server": "",
         "via": "",

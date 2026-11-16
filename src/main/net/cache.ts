@@ -1,16 +1,47 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, unlink, utimes, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export class CacheStore {
-  constructor(private readonly root: string) {}
-  private key(url: string): string { return createHash('sha256').update(url).digest('hex'); }
-  async get(url: string): Promise<Buffer | undefined> {
-    try { return await readFile(join(this.root, this.key(url))); } catch { return undefined; }
+  private queue: Promise<void> = Promise.resolve();
+  constructor(private readonly root: string, private readonly maxBytes = 256 * 1024 * 1024) {
+    if (!Number.isSafeInteger(maxBytes) || maxBytes < 0) throw new Error('invalid-cache-limit');
   }
-  async put(url: string, body: Buffer): Promise<void> {
-    await mkdir(this.root, { recursive: true });
-    await writeFile(join(this.root, this.key(url)), body, { mode: 0o600 });
+  private key(url: string): string { return createHash('sha256').update(url).digest('hex'); }
+  private serialize<T>(operation: () => Promise<T>): Promise<T> {
+    const result = this.queue.then(operation);
+    this.queue = result.then(() => undefined, () => undefined);
+    return result;
+  }
+  get(url: string): Promise<Buffer | undefined> {
+    return this.serialize(async () => {
+      const path = join(this.root, this.key(url));
+      try {
+        const body = await readFile(path);
+        const now = new Date();
+        await utimes(path, now, now);
+        return body;
+      } catch { return undefined; }
+    });
+  }
+  put(url: string, body: Buffer): Promise<void> {
+    return this.serialize(async () => {
+      await mkdir(this.root, { recursive: true });
+      const path = join(this.root, this.key(url));
+      if (body.length > this.maxBytes) { await unlink(path).catch(() => undefined); return; }
+      await writeFile(path, body, { mode: 0o600 });
+      const files = await Promise.all((await readdir(this.root)).filter((name) => /^[a-f0-9]{64}$/.test(name)).map(async (name) => {
+        const info = await stat(join(this.root, name));
+        return { name, size: info.size, age: info.mtimeMs };
+      }));
+      let size = files.reduce((sum, file) => sum + file.size, 0);
+      files.sort((a, b) => a.age - b.age || a.name.localeCompare(b.name));
+      for (const file of files) {
+        if (size <= this.maxBytes) break;
+        await unlink(join(this.root, file.name));
+        size -= file.size;
+      }
+    });
   }
 }
 

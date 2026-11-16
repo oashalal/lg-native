@@ -145,6 +145,15 @@ export class PatchEngine {
     return { content, report };
   }
 
+  runtimeHostMissing(input: { siteVer: string; channel: string; page: string }): PatchReport {
+    const entries: PatchReportEntry[] = this.safeMode ? [] : this.manifests
+      .filter((manifest) => manifest.enabled && manifest.type === 'runtime' && !manifest.network?.hosts.length && matchesScope(manifest, { ...input, path: '/site/app.js', content: '' }))
+      .map((manifest) => ({ patchId: manifest.id, status: 'skipped', reason: 'runtime-host-missing', siteVer: input.siteVer }));
+    const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.page };
+    if (entries.length) this.record(report);
+    return report;
+  }
+
   runRuntime(api: unknown, siteVer: string): PatchReport {
     const entries: PatchReportEntry[] = [];
     if (this.safeMode) {

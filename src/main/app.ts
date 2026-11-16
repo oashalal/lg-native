@@ -22,6 +22,7 @@ const reportLog = new ReportLog(reportFile);
 let engine = new PatchEngine([], [], safeMode);
 let tray: Tray | undefined;
 let siteVer = 'unknown';
+let runtimeHostSeen = false;
 let manifests: PatchManifest[] = [];
 const capabilities = new Map<string, { manifest: PatchManifest; worldId: number; script: string }>();
 let gameContents: Electron.WebContents | undefined;
@@ -43,6 +44,7 @@ async function fetchSite(request: Request, ses: Electron.Session): Promise<Respo
     const cached = await cache.get(url.toString());
     if (cached) {
       if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return new Response(new Uint8Array(cached));
+      if (url.pathname === '/site/app.js') runtimeHostSeen = true;
       const result = engine.applyToFile({ path: url.pathname, content: cached.toString('utf8'), siteVer, channel, page: `/c/${channel}/` });
       result.report.fileVer = url.searchParams.get('v') ?? 'unknown';
       await recordPatchReport(result.report);
@@ -54,6 +56,7 @@ async function fetchSite(request: Request, ses: Electron.Session): Promise<Respo
   const body = Buffer.from(await response.arrayBuffer());
   if (isVersionedAsset(url)) await cache.put(url.toString(), body);
   if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return new Response(new Uint8Array(body), { status: response.status, headers: response.headers });
+  if (url.pathname === '/site/app.js') runtimeHostSeen = true;
   const result = engine.applyToFile({ path: url.pathname, content: body.toString('utf8'), siteVer, channel, page: `/c/${channel}/` });
   result.report.fileVer = url.searchParams.get('v') ?? 'unknown';
   await recordPatchReport(result.report);
@@ -116,7 +119,14 @@ async function createWindow(): Promise<BrowserWindow> {
   layout(); win.on('resize', layout);
   view.webContents.setWindowOpenHandler(({ url }) => { if (isAllowedNavigation(url)) return { action: 'allow' }; void shell.openExternal(url); return { action: 'deny' }; });
   view.webContents.on('will-navigate', (event, url) => { if (!isAllowedNavigation(url)) event.preventDefault(); });
-  view.webContents.on('did-finish-load', () => { void runIsolatedPatches(view.webContents); });
+  view.webContents.on('did-start-loading', () => { runtimeHostSeen = false; });
+  view.webContents.on('did-finish-load', () => {
+    let url: URL;
+    try { url = new URL(view.webContents.getURL()); } catch { return; }
+    if (url.origin !== GAME_ORIGIN) return;
+    if (!runtimeHostSeen) void recordPatchReport(engine.runtimeHostMissing({ siteVer, channel, page: url.pathname }));
+    void runIsolatedPatches(view.webContents);
+  });
   await win.loadFile(join(app.getAppPath(), 'src/main/native/toolbar.html'));
   await view.webContents.loadURL(`${GAME_ORIGIN}/c/${encodeURIComponent(channel)}/`);
   return win;

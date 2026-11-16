@@ -50,6 +50,15 @@ describe('PatchEngine', () => {
     expect(engine.applyToFile({ path: '/site/other.js', content: source, siteVer: 'unknown' }).report.entries).toEqual([]);
     expect(engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown' }).content).toContain('window.testPatch = true;');
   });
+  it('reports a missing runtime host for applicable page-world patches', () => {
+    const engine = new PatchEngine([
+      { ...base, id: 'runtime', type: 'runtime', strict: false, settings: { script: 'window.test = true;' } },
+      { ...base, id: 'network', type: 'runtime', network: { hosts: ['example.com'] } },
+    ]);
+    const report = engine.runtimeHostMissing({ siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
+    expect(report.entries).toEqual([{ patchId: 'runtime', status: 'skipped', reason: 'runtime-host-missing', siteVer: 'unknown' }]);
+    expect(engine.reports).toContain(report);
+  });
   it('does not inject network-enabled runtime code into the page world', () => {
     const engine = new PatchEngine([{ ...base, id: 'network', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, settings: { script: 'window.secret = true;' } }]);
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown' });
