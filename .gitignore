@@ -1,0 +1,9 @@
+node_modules/
+dist/
+profiles/
+accounts/
+*.log
+reports/
+.env*
+playwright-report/
+test-results/

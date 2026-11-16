@@ -35,7 +35,19 @@ export class PatchEngine {
     if (this.safeMode) {
       for (const manifest of this.manifests) entries.push({ patchId: manifest.id, status: 'skipped', reason: 'safe-mode', siteVer: input.siteVer });
     } else {
-      for (const manifest of this.manifests.filter((item) => item.enabled && (item.type === 'css' || item.type === 'source' || item.type === 'ast'))) {
+      for (const manifest of this.manifests) {
+        if (!manifest.enabled) {
+          entries.push({ patchId: manifest.id, status: 'skipped', reason: 'disabled', siteVer: input.siteVer });
+          continue;
+        }
+        if (manifest.type === 'runtime') {
+          entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-preload-unavailable', siteVer: input.siteVer });
+          continue;
+        }
+        if (manifest.type === 'native') {
+          entries.push({ patchId: manifest.id, status: 'skipped', reason: 'native-not-implemented', siteVer: input.siteVer });
+          continue;
+        }
         const target = manifest.targets.find((item) => item.file === input.path);
         if (manifest.type === 'css' && !target) continue;
         if (manifest.type === 'ast') { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'ast-not-implemented', siteVer: input.siteVer }); continue; }
@@ -65,8 +77,8 @@ export class PatchEngine {
         }
       }
     }
-    const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString() };
-    this.reports.push(report);
+    const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.path };
+    if (entries.length) this.reports.push(report);
     return { content, report };
   }
 

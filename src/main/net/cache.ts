@@ -15,7 +15,13 @@ export class CacheStore {
 }
 
 export function isPassthroughPath(url: URL): boolean {
-  return url.pathname.startsWith('/api/') || url.pathname.startsWith('/auth/') || url.pathname === '/ws' || url.pathname.startsWith('/events') || url.pathname.startsWith('/sse');
+  return /^\/api\//.test(url.pathname)
+    || /^\/auth\//.test(url.pathname)
+    || /^\/c\/[^/]+\/(?:api|auth)\//.test(url.pathname)
+    || url.pathname === '/ws'
+    || /^\/c\/[^/]+\/ws(?:\/|$)/.test(url.pathname)
+    || url.pathname.startsWith('/events')
+    || url.pathname.startsWith('/sse');
 }
 
 export function isVersionedAsset(url: URL): boolean {

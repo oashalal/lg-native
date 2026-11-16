@@ -36,7 +36,7 @@ export type PatchManifest = z.infer<typeof patchManifestSchema>;
 export type PatchTypeName = z.infer<typeof PatchType>;
 export type PatchStatus = 'applied' | 'skipped' | 'failed';
 export interface PatchReportEntry { patchId: string; status: PatchStatus; reason?: string; siteVer: string; }
-export interface PatchReport { siteVer: string; entries: PatchReportEntry[]; safeMode: boolean; generatedAt: string; }
+export interface PatchReport { siteVer: string; entries: PatchReportEntry[]; safeMode: boolean; generatedAt: string; path?: string; }
 
 export function parseManifest(value: unknown): PatchManifest {
   return patchManifestSchema.parse(value);

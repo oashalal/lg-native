@@ -1,5 +1,4 @@
 import { readFile, readdir } from 'node:fs/promises';
-import { join } from 'node:path';
 const root = new URL('../../patches/', import.meta.url);
 const snapshot = new URL('../../fixtures/snapshots/13ebcdcfc1/', import.meta.url);
 for (const entry of await readdir(root, { withFileTypes: true })) {
