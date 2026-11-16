@@ -1,0 +1,12 @@
+/* global window, CSS, setInterval, applyGameTheme */
+let model = [];
+const root = document.getElementById('patches');
+function esc(value) { return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+function render() { root.innerHTML = model.map(patch => `<section class="patch" data-id="${esc(patch.id)}"><div class="head"><h2>${esc(patch.name)}</h2><label><input data-enabled type="checkbox" ${patch.enabled ? 'checked' : ''}> Включён</label></div>${Object.entries(patch.schema || {}).map(([key, spec]) => { const value = patch.settings[key] ?? spec.default; const input = spec.type === 'boolean' ? `<input data-key="${esc(key)}" type="checkbox" ${value ? 'checked' : ''}>` : `<input data-key="${esc(key)}" type="${spec.type === 'number' ? 'number' : 'text'}" value="${esc(value)}" ${spec.maxLength ? `maxlength="${spec.maxLength}"` : ''} ${spec.min !== undefined ? `min="${spec.min}"` : ''} ${spec.max !== undefined ? `max="${spec.max}"` : ''}>`; return `<div class="field"><label>${esc(spec.label)}</label>${input}${spec.description ? `<span class="desc">${esc(spec.description)}</span>` : ''}</div>`; }).join('')}</section>`).join(''); }
+async function load() { try { const result = await window.lgNativeSettings.load(); model = result.patches; applyGameTheme(result.theme); render(); } catch { root.textContent = 'Не удалось загрузить настройки'; } }
+function collect() { const result = {}; for (const patch of model) { const section = root.querySelector(`[data-id="${CSS.escape(patch.id)}"]`); const values = {}; for (const key of Object.keys(patch.schema || {})) { const input = section.querySelector(`[data-key="${CSS.escape(key)}"]`); values[key] = input.type === 'checkbox' ? input.checked : input.type === 'number' ? Number(input.value) : input.value; } result[patch.id] = { enabled: section.querySelector('[data-enabled]').checked, values }; } return result; }
+document.getElementById('cancel').onclick = () => window.close();
+document.getElementById('save').onclick = async () => { const message = document.getElementById('message'); try { await window.lgNativeSettings.save(collect()); message.textContent = 'Сохранено и применено. Проверьте страницу игры.'; } catch (error) { message.textContent = `Ошибка: ${error.message}`; } };
+void load();
+
+setInterval(() => { void window.lgNativeSettings.theme().then(applyGameTheme).catch(() => {}); }, 3000);

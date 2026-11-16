@@ -13,4 +13,23 @@ describe('network policy', () => {
     const result = await fetchForPatch(localManifest, { url: `http://localhost:${address.port}/data` });
     expect(result.body).toBe('patch-data'); await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
   });
+  it('rejects redirects to hosts outside the allowlist and forbidden credentials', async () => {
+    const server = createServer((_request, response) => { response.writeHead(302, { location: 'https://evil.example/secret' }); response.end(); });
+    await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+    try {
+      const address = server.address(); if (!address || typeof address === 'string') throw new Error('no-address');
+      const local = { ...manifest, network: { hosts: ['127.0.0.1'] } };
+      const url = `http://127.0.0.1:${address.port}/`;
+      await expect(fetchForPatch(local, { url })).rejects.toThrow('network-host-not-allowed');
+      await expect(fetchForPatch(local, { url, headers: { Cookie: 'secret' } })).rejects.toThrow('network-header-denied');
+    } finally { await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); }
+  });
+  it('enforces response size while reading', async () => {
+    const server = createServer((_request, response) => response.end('too long'));
+    await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+    try {
+      const address = server.address(); if (!address || typeof address === 'string') throw new Error('no-address');
+      await expect(fetchForPatch({ ...manifest, network: { hosts: ['127.0.0.1'], maxBytes: 2 } }, { url: `http://127.0.0.1:${address.port}/` })).rejects.toThrow('network-response-too-large');
+    } finally { await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve())); }
+  });
 });

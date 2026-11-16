@@ -1,5 +1,13 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+const isolatedPatches = ipcRenderer.sendSync('lgx:isolated-bootstrap') as Array<{ worldId: number; token: string }>;
+for (const patch of isolatedPatches) {
+  contextBridge.exposeInIsolatedWorld(patch.worldId, 'LGX', {
+    net: { fetch: (url: string, options?: unknown) => ipcRenderer.invoke('lgx:net-fetch', { token: patch.token, url, options }) },
+    log: (...args: unknown[]) => console.info('[lg-native patch]', ...args),
+  });
+}
+
 type IPCValue = unknown;
 type PatchReport = { siteVer: string; entries: Array<{ patchId: string; status: string; reason?: string; siteVer: string }>; safeMode: boolean; generatedAt: string };
 

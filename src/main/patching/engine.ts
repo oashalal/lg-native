@@ -12,6 +12,31 @@ function count(text: string, needle: string): number {
   return total;
 }
 
+// Replace complete function bodies using parser offsets, without regenerating the
+// rest of the site's source. Only named function declarations are selected.
+function replaceFunctionBody(source: string, name: string, replacement: string, expected: number): string {
+  const tree = parseJavaScript(source, { ecmaVersion: 'latest', sourceType: 'script' });
+  const matches: Array<{ start: number; end: number }> = [];
+  const visit = (value: unknown): void => {
+    if (!value || typeof value !== 'object') return;
+    if (Array.isArray(value)) { for (const item of value) visit(item); return; }
+    const node = value as Record<string, unknown>;
+    if (node.type === 'FunctionDeclaration' && node.id && typeof node.id === 'object' && (node.id as { name?: unknown }).name === name && node.body && typeof node.body === 'object') {
+      const body = node.body as { start: number; end: number };
+      matches.push({ start: body.start, end: body.end });
+    }
+    for (const child of Object.values(node)) visit(child);
+  };
+  visit(tree);
+  if (matches.length !== expected) throw new Error(`function-count:${matches.length}/${expected}`);
+  matches.sort((a, b) => a.start - b.start);
+  for (let i = 1; i < matches.length; i++) if (matches[i]!.start < matches[i - 1]!.end) throw new Error('overlapping-functions');
+  let result = source;
+  for (const match of matches.reverse()) result = result.slice(0, match.start) + `{\n${replacement}\n}` + result.slice(match.end);
+  parseJavaScript(result, { ecmaVersion: 'latest', sourceType: 'script' });
+  return result;
+}
+
 function matchesScope(manifest: PatchManifest, input: PatchFileInput): boolean {
   const glob = (pattern: string, value: string | undefined) => !value || pattern === '*' || (pattern.endsWith('*') ? value.startsWith(pattern.slice(0, -1)) : pattern === value);
   return manifest.scope.channels.some((pattern) => glob(pattern, input.channel)) && manifest.scope.pages.some((pattern) => glob(pattern, input.page));
@@ -21,12 +46,18 @@ export class PatchEngine {
   private readonly manifests: PatchManifest[];
   private readonly runtime: RuntimePatch[];
   private readonly safeMode: boolean;
+  private readonly disabled = new Set<string>();
   readonly reports: PatchReport[] = [];
 
   constructor(manifests: unknown[], runtime: RuntimePatch[] = [], safeMode = false) {
     this.manifests = manifests.map(parseManifest);
     this.runtime = runtime;
     this.safeMode = safeMode;
+  }
+
+  record(report: PatchReport): void {
+    this.reports.push(report);
+    if (this.reports.length > 500) this.reports.shift();
   }
 
   applyToFile(input: PatchFileInput): PatchFileOutput {
@@ -36,12 +67,35 @@ export class PatchEngine {
       for (const manifest of this.manifests) entries.push({ patchId: manifest.id, status: 'skipped', reason: 'safe-mode', siteVer: input.siteVer });
     } else {
       for (const manifest of this.manifests) {
+        if (manifest.type === 'runtime' && input.path !== '/site/app.js') continue;
+        if ((manifest.type === 'css' || manifest.type === 'source' || manifest.type === 'ast') && !manifest.targets.some((target) => target.file === input.path)) continue;
         if (!manifest.enabled) {
           entries.push({ patchId: manifest.id, status: 'skipped', reason: 'disabled', siteVer: input.siteVer });
           continue;
         }
+        if (this.disabled.has(manifest.id)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'failed-earlier', siteVer: input.siteVer }); continue; }
         if (manifest.type === 'runtime') {
-          entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-preload-unavailable', siteVer: input.siteVer });
+          if (manifest.network?.hosts.length) continue; // Executed in a dedicated isolated world.
+          if (input.path !== '/site/app.js') continue;
+          // Runtime patches are local scripts. Appending them to the last application
+          // bundle keeps execution in the page world while preload remains isolated.
+          const script = manifest.settings.script;
+          if (typeof script !== 'string' || !script.trim()) {
+            entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-script-missing', siteVer: input.siteVer });
+            continue;
+          }
+          if (manifest.strict && !manifest.siteVersions.includes(input.siteVer)) {
+            entries.push({ patchId: manifest.id, status: 'skipped', reason: 'site-version', siteVer: input.siteVer });
+            continue;
+          }
+          if (!matchesScope(manifest, input)) {
+            entries.push({ patchId: manifest.id, status: 'skipped', reason: 'scope', siteVer: input.siteVer });
+            continue;
+          }
+          const requirements = JSON.stringify(manifest.requires);
+          const settings = JSON.stringify(manifest.settings, (key, value: unknown) => key === 'script' ? undefined : value);
+          content += `\n;/* lg-native runtime:${manifest.id} */\n(async function(){try { const requirements = ${requirements}; for (const requirement of requirements) { const end = Date.now() + 10000; const exists = () => requirement.startsWith('global:') ? window[requirement.slice(7)] : requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement); while (!exists()) { if (Date.now() >= end) throw new Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } const settings = ${settings}; ${script}\n} catch (error) { console.error('[lg-native:${manifest.id}]', error); }})();\n`;
+          entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
           continue;
         }
         if (manifest.type === 'native') {
@@ -50,15 +104,19 @@ export class PatchEngine {
         }
         const target = manifest.targets.find((item) => item.file === input.path);
         if (manifest.type === 'css' && !target) continue;
-        if (manifest.type === 'ast') { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'ast-not-implemented', siteVer: input.siteVer }); continue; }
+        if ((manifest.type === 'source' || manifest.type === 'ast') && !target) continue;
         if (manifest.strict && !manifest.siteVersions.includes(input.siteVer)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'site-version', siteVer: input.siteVer }); continue; }
         if (!matchesScope(manifest, input)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'scope', siteVer: input.siteVer }); continue; }
         if (manifest.type === 'source' && !target) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'target-file', siteVer: input.siteVer }); continue; }
+        const before = content;
         try {
           if (manifest.type === 'css') {
             const replacement = target?.replacement ?? manifest.settings.css;
             if (typeof replacement !== 'string') throw new Error('css patch requires settings.css or target.replacement');
             content += `\n/* lg-native:${manifest.id} */\n${replacement}\n`;
+          } else if (manifest.type === 'ast') {
+            if (!target?.functionName || target.replacement === undefined) throw new Error('ast-target-missing');
+            content = replaceFunctionBody(content, target.functionName, target.replacement, target.expect ?? 1);
           } else {
             const anchor = target?.anchor ?? '';
             const expected = target?.expect ?? 1;
@@ -71,14 +129,19 @@ export class PatchEngine {
           }
           entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
         } catch (error) {
-          content = input.content;
+          content = before;
+          this.disabled.add(manifest.id);
           entries.push({ patchId: manifest.id, status: 'failed', reason: error instanceof Error ? error.message : String(error), siteVer: input.siteVer });
-          if (manifest.onFail === 'original') content = input.content;
+          if (manifest.onFail === 'original') {
+            content = input.content;
+            for (const entry of entries) if (entry.status === 'applied') { entry.status = 'skipped'; entry.reason = 'rolled-back'; }
+            break;
+          }
         }
       }
     }
     const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.path };
-    if (entries.length) this.reports.push(report);
+    if (entries.length) { this.reports.push(report); if (this.reports.length > 500) this.reports.shift(); }
     return { content, report };
   }
 

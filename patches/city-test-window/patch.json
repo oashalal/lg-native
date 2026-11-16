@@ -1,0 +1,17 @@
+{
+  "id": "city-test-window",
+  "name": "Тестовое окно города",
+  "version": "1.0.0",
+  "type": "runtime",
+  "enabled": true,
+  "siteVersions": ["13ebcdcfc1"],
+  "strict": false,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "requires": [],
+  "onFail": "disable",
+  "settings": {},
+  "settingsSchema": {
+    "label": { "type": "string", "label": "Подпись кнопки", "default": "Тест", "maxLength": 24 },
+    "showMessage": { "type": "boolean", "label": "Показывать текст в окне", "default": true }
+  }
+}
