@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm typecheck && vitest run",
     "start": "pnpm build && electron .",
+    "test:e2e": "pnpm build && node tests/e2e/lgx.mjs",
     "lint": "eslint src tests tools patches --ext .ts,.js,.cts,.mjs"
   },
   "pnpm": {

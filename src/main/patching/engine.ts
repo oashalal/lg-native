@@ -1,6 +1,7 @@
 import { parseManifest, type PatchManifest, type PatchReport, type PatchReportEntry } from '../../shared/manifest.js';
 import { parse as parseJavaScript } from 'acorn';
 import { compatibility, type CompatibilityMatrix } from './compat.js';
+import { installPageLGX } from '../../runtime/lgx.js';
 
 export interface PatchFileInput { path: string; content: string; siteVer: string; channel?: string; page?: string; }
 export interface PatchFileOutput { content: string; report: PatchReport; }
@@ -141,6 +142,11 @@ export class PatchEngine {
           }
         }
       }
+    }
+    if (input.path === '/site/app.js' && entries.some((entry) => entry.status === 'applied')) {
+      const settings = Object.fromEntries(this.manifests.map((manifest) => [manifest.id, Object.fromEntries(Object.entries(manifest.settings).filter(([key]) => key !== 'script'))]));
+      const args = JSON.stringify([input.siteVer, settings]).replace(/</g, '\\u003c');
+      content = `;(${installPageLGX.toString()})(...${args});\n${content}`;
     }
     const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.path };
     if (entries.length) { this.reports.push(report); if (this.reports.length > 500) this.reports.shift(); }
