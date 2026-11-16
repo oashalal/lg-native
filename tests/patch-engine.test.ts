@@ -2,13 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { PatchEngine } from '../src/main/patching/engine.js';
 
 const source = 'const api = (p) => fetch(p);\nwindow.LGLive = () => true;';
-const base = { name: 'test', version: '1', enabled: true, siteVersions: ['13ebcdcfc1'], strict: true, scope: { channels: ['*'], pages: ['/c/*'] }, requires: [], onFail: 'disable', settings: {} };
+const base = { name: 'test', version: '1', enabled: true, siteVersions: [], strict: false, scope: { channels: ['*'], pages: ['/c/*'] }, requires: [], onFail: 'disable', settings: {} };
 
 describe('PatchEngine', () => {
   it('applies an exact source anchor and validates syntax', () => {
     const engine = new PatchEngine([{ ...base, id: 'source', type: 'source', targets: [{ file: '/site/app.js', anchor: 'window.LGLive = () => true;', expect: 1, replacement: 'window.LGX = true;' }] }]);
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: '13ebcdcfc1', channel: '5opka', page: '/c/5opka/' });
     expect(result.content).toContain('window.LGX = true;'); expect(result.report.entries[0]?.status).toBe('applied');
+  });
+  it('gates source patches by per-patch compatibility and marks unverified changes', () => {
+    const manifest = { ...base, id: 'source', type: 'source', strict: true, targets: [{ file: '/site/app.js', anchor: 'true;', replacement: 'false;' }] };
+    const input = { path: '/site/app.js', content: source, siteVer: 'v2' };
+    expect(new PatchEngine([manifest]).applyToFile(input).report.entries[0]?.reason).toBe('site-version');
+    expect(new PatchEngine([manifest], [], false, { v2: { source: 'ok' } }).applyToFile(input).report.entries[0]?.status).toBe('applied');
+    expect(new PatchEngine([manifest], [], false, { v2: { source: 'failed' } }).applyToFile(input).report.entries[0]?.reason).toBe('compat-failed');
+    expect(new PatchEngine([{ ...manifest, strict: false }]).applyToFile(input).report.entries[0]?.reason).toBe('unverified');
+    expect(new PatchEngine([{ ...manifest, siteVersions: ['v1'] }], [], false, { v2: { source: 'ok' } }).applyToFile(input).report.entries[0]?.reason).toBe('site-version');
   });
   it('returns original content when anchor count is wrong', () => {
     const engine = new PatchEngine([{ ...base, id: 'broken', type: 'source', targets: [{ file: '/site/app.js', anchor: 'missing', expect: 1, replacement: 'x' }] }]);

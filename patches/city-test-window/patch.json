@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "runtime",
   "enabled": true,
-  "siteVersions": ["13ebcdcfc1"],
+  "siteVersions": [],
   "strict": false,
   "scope": { "channels": ["*"], "pages": ["/c/*"] },
   "requires": [],

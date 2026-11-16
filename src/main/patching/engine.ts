@@ -1,5 +1,6 @@
 import { parseManifest, type PatchManifest, type PatchReport, type PatchReportEntry } from '../../shared/manifest.js';
 import { parse as parseJavaScript } from 'acorn';
+import { compatibility, type CompatibilityMatrix } from './compat.js';
 
 export interface PatchFileInput { path: string; content: string; siteVer: string; channel?: string; page?: string; }
 export interface PatchFileOutput { content: string; report: PatchReport; }
@@ -49,7 +50,7 @@ export class PatchEngine {
   private readonly disabled = new Set<string>();
   readonly reports: PatchReport[] = [];
 
-  constructor(manifests: unknown[], runtime: RuntimePatch[] = [], safeMode = false) {
+  constructor(manifests: unknown[], runtime: RuntimePatch[] = [], safeMode = false, private readonly matrix: CompatibilityMatrix = {}) {
     this.manifests = manifests.map(parseManifest);
     this.runtime = runtime;
     this.safeMode = safeMode;
@@ -84,8 +85,8 @@ export class PatchEngine {
             entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-script-missing', siteVer: input.siteVer });
             continue;
           }
-          if (manifest.strict && !manifest.siteVersions.includes(input.siteVer)) {
-            entries.push({ patchId: manifest.id, status: 'skipped', reason: 'site-version', siteVer: input.siteVer });
+          if (compatibility(manifest, input.siteVer, this.matrix) === 'skipped' || compatibility(manifest, input.siteVer, this.matrix) === 'failed') {
+            entries.push({ patchId: manifest.id, status: 'skipped', reason: compatibility(manifest, input.siteVer, this.matrix) === 'failed' ? 'compat-failed' : 'site-version', siteVer: input.siteVer });
             continue;
           }
           if (!matchesScope(manifest, input)) {
@@ -105,7 +106,8 @@ export class PatchEngine {
         const target = manifest.targets.find((item) => item.file === input.path);
         if (manifest.type === 'css' && !target) continue;
         if ((manifest.type === 'source' || manifest.type === 'ast') && !target) continue;
-        if (manifest.strict && !manifest.siteVersions.includes(input.siteVer)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'site-version', siteVer: input.siteVer }); continue; }
+        const compat = compatibility(manifest, input.siteVer, this.matrix);
+        if (compat === 'skipped' || compat === 'failed') { entries.push({ patchId: manifest.id, status: 'skipped', reason: compat === 'failed' ? 'compat-failed' : 'site-version', siteVer: input.siteVer }); continue; }
         if (!matchesScope(manifest, input)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'scope', siteVer: input.siteVer }); continue; }
         if (manifest.type === 'source' && !target) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'target-file', siteVer: input.siteVer }); continue; }
         const before = content;
@@ -127,7 +129,7 @@ export class PatchEngine {
             content = content.split(anchor).join(replacement);
             parseJavaScript(content, { ecmaVersion: 'latest', sourceType: 'script' });
           }
-          entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
+          entries.push({ patchId: manifest.id, status: 'applied', ...(compat === 'unverified' ? { reason: 'unverified' } : {}), siteVer: input.siteVer });
         } catch (error) {
           content = before;
           this.disabled.add(manifest.id);
@@ -161,7 +163,7 @@ export class PatchEngine {
     } else {
       for (const patch of this.runtime) {
         const manifest = patch.manifest;
-        if (!manifest.enabled || (manifest.strict && !manifest.siteVersions.includes(siteVer))) { entries.push({ patchId: manifest.id, status: 'skipped', reason: manifest.enabled ? 'site-version' : 'disabled', siteVer }); continue; }
+        if (!manifest.enabled || ['skipped', 'failed'].includes(compatibility(manifest, siteVer, this.matrix))) { entries.push({ patchId: manifest.id, status: 'skipped', reason: !manifest.enabled ? 'disabled' : compatibility(manifest, siteVer, this.matrix) === 'failed' ? 'compat-failed' : 'site-version', siteVer }); continue; }
         try {
           for (const requirement of manifest.requires) {
             if (!requirement.startsWith('global:')) continue;

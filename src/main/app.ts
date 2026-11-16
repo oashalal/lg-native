@@ -4,6 +4,7 @@ import { readFile, readdir, writeFile, mkdir, rename } from 'node:fs/promises';
 import { CacheStore, isPassthroughPath, isVersionedAsset } from './net/cache.js';
 import { IPC } from './ipc/channels.js';
 import { PatchEngine } from './patching/engine.js';
+import { compatibility, parseMatrix, type CompatibilityMatrix } from './patching/compat.js';
 import { restoreGameApiOrigin } from './net/origin.js';
 import { parseManifest, type PatchManifest } from '../shared/manifest.js';
 import { parse as parseJavaScript } from 'acorn';
@@ -22,6 +23,7 @@ const reportLog = new ReportLog(reportFile);
 let engine = new PatchEngine([], [], safeMode);
 let tray: Tray | undefined;
 let siteVer = 'unknown';
+let matrix: CompatibilityMatrix = {};
 let runtimeHostSeen = false;
 let manifests: PatchManifest[] = [];
 const capabilities = new Map<string, { manifest: PatchManifest; worldId: number; script: string }>();
@@ -153,7 +155,7 @@ async function loadPatchManifests(): Promise<void> {
     } catch (error) { console.error(`[lg-native] patch ${item.name} unavailable`, error); }
   }
   manifests = loaded;
-  engine = new PatchEngine(manifests, [], safeMode);
+  engine = new PatchEngine(manifests, [], safeMode, matrix);
   capabilities.clear();
   for (const manifest of manifests) {
     if (!safeMode && manifest.enabled && manifest.type === 'runtime' && manifest.network?.hosts.length && typeof manifest.settings.script === 'string') {
@@ -164,7 +166,7 @@ async function loadPatchManifests(): Promise<void> {
 
 function eligible(manifest: PatchManifest, page: string): boolean {
   const match = (pattern: string, value: string) => pattern === '*' || (pattern.endsWith('*') ? value.startsWith(pattern.slice(0, -1)) : pattern === value);
-  return manifest.enabled && (!manifest.strict || manifest.siteVersions.includes(siteVer)) && manifest.scope.channels.some((p) => match(p, channel)) && manifest.scope.pages.some((p) => match(p, page));
+  return manifest.enabled && !['skipped', 'failed'].includes(compatibility(manifest, siteVer, matrix)) && manifest.scope.channels.some((p) => match(p, channel)) && manifest.scope.pages.some((p) => match(p, page));
 }
 
 async function runIsolatedPatches(contents: Electron.WebContents): Promise<void> {
@@ -226,7 +228,7 @@ function installIpc(): void {
     for (const manifest of manifests) latest.set(manifest.id, 'pending');
     for (const report of engine.reports) for (const entry of report.entries) latest.set(entry.patchId, entry.status);
     const theme = await readGameTheme();
-    return { back: history.canGoBack(), forward: history.canGoForward(), applied: [...latest.values()].filter((value) => value === 'applied').length, failed: [...latest.values()].filter((value) => value === 'failed').length, total: manifests.filter((patch) => patch.enabled).length, pending: [...latest.values()].filter((value) => value === 'pending').length, safeMode, theme };
+    return { back: history.canGoBack(), forward: history.canGoForward(), applied: [...latest.values()].filter((value) => value === 'applied').length, failed: [...latest.values()].filter((value) => value === 'failed').length, total: manifests.filter((patch) => patch.enabled).length, versionUnverified: !Object.hasOwn(matrix, siteVer), pending: [...latest.values()].filter((value) => value === 'pending').length, safeMode, theme };
   });
   ipcMain.on('lgx:isolated-bootstrap', (event) => {
     event.returnValue = isGameFrame(event) ? [...capabilities].filter(([, patch]) => eligible(patch.manifest, new URL(event.senderFrame!.url).pathname)).map(([token, patch]) => ({ token, worldId: patch.worldId })) : [];
@@ -276,6 +278,7 @@ function installIpc(): void {
 app.whenReady().then(async () => {
   try { const data: unknown = JSON.parse(await readFile(settingsFile, 'utf8')); if (data && typeof data === 'object' && !Array.isArray(data)) patchOverrides = data as PatchOverrides; } catch { /* Optional settings file. */ }
   try { const data: unknown = JSON.parse(await readFile(join(profile, 'config.json'), 'utf8')); if (data && typeof data === 'object' && 'serverUrl' in data && typeof data.serverUrl === 'string') serverUrl = data.serverUrl; } catch { /* Optional profile config. */ }
+  try { matrix = parseMatrix(JSON.parse(await readFile(join(app.getAppPath(), 'compat/matrix.json'), 'utf8'))); } catch { console.warn('[lg-native] compatibility matrix unavailable'); }
   installIpc(); await loadPatchManifests(); tray = new Tray(nativeImage.createEmpty());
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: safeMode ? 'Выключить safe mode' : 'Включить safe mode', type: 'checkbox', checked: safeMode, click: () => { const args = process.argv.slice(1).filter((arg) => arg !== '--safe-mode'); if (!safeMode) args.push('--safe-mode'); app.relaunch({ args }); app.exit(0); } },
