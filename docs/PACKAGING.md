@@ -1,6 +1,6 @@
 # Сборка Flatpak
 
-Для сборки Linux-бинарника установите `electron-builder` и `flatpak-builder`, затем выполните:
+Для сборки Linux-бинарника установите `flatpak-builder` и необходимые Flatpak runtime/SDK, затем выполните:
 
 ```sh
 pnpm package:flatpak
