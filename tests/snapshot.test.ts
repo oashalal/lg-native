@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 // @ts-expect-error The snapshot tool is an executable JavaScript module.
-const { createSnapshot, readSessionValue } = await import('../tools/snapshot/index.mjs');
+const { createSnapshot, findVersionedUrls, readSessionValue } = await import('../tools/snapshot/index.mjs');
 
 const servers: Server[] = [];
 afterEach(async () => { for (const server of servers.splice(0)) await new Promise((resolve) => server.close(resolve)); });
@@ -59,5 +59,18 @@ describe('snapshot tool', () => {
       await chmod(file, 0o644);
       await expect(readSessionValue({}, home)).rejects.toThrow('permissions must be 600');
     } finally { await rm(home, { recursive: true, force: true }); }
+  });
+
+  it('discovers site and channel resources from the version map', () => {
+    const urls = findVersionedUrls('window.LG_SITEF={"a.js":"hash","@b.js":"hash2","/lib/c.js":"hash3"};', 'http://localhost/c/test/', 'http://localhost');
+    expect(urls).toEqual(['http://localhost/site/a.js?v=hash', 'http://localhost/c/test/b.js?v=hash2', 'http://localhost/lib/c.js?v=hash3']);
+  });
+
+  it('reports an expired session on a login redirect', async () => {
+    const server = createServer((_request, response) => { response.writeHead(302, { location: '/auth/twitch/login' }); response.end(); });
+    const port = await listen(server); servers.push(server);
+    const root = await mkdtemp(join(tmpdir(), 'lg-snapshot-expired-'));
+    try { await expect(createSnapshot({ origin: `http://127.0.0.1:${port}`, snapshotRoot: root, session: 'session-secret' })).rejects.toThrow('обновите lsid'); }
+    finally { await rm(root, { recursive: true, force: true }); }
   });
 });

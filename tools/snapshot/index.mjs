@@ -1,4 +1,4 @@
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, open } from 'node:fs/promises';
 import { Buffer } from 'node:buffer';
 import { homedir } from 'node:os';
 import { join, posix } from 'node:path';
@@ -15,13 +15,14 @@ export function readSessionValue(env = process.env, home = homedir()) {
   const fromEnvironment = env.LG_LSID?.trim();
   if (fromEnvironment) return fromEnvironment;
   const path = join(home, '.config', 'lg-native', 'lsid');
-  return readFile(path, { encoding: 'utf8' }).then(async (value) => {
-    const { stat } = await import('node:fs/promises');
-    const mode = (await stat(path)).mode & 0o777;
+  return open(path, 'r').then(async (file) => {
+    try {
+    const mode = (await file.stat()).mode & 0o777;
     if (mode !== 0o600) throw new Error('lsid file permissions must be 600');
-    const result = value.trim();
+    const result = (await file.readFile('utf8')).trim();
     if (!result) throw new Error('lsid is empty');
     return result;
+    } finally { await file.close(); }
   });
 }
 
@@ -37,6 +38,15 @@ export function findVersionedUrls(text, baseUrl, origin = new URL(baseUrl).origi
   const add = (raw) => { if (isVersionedUrl(raw, origin)) urls.add(new URL(raw, baseUrl).toString()); };
   for (const match of text.matchAll(/(?:src|href)\s*=\s*["']([^"']+)["']/gi)) add(match[1]);
   for (const match of text.matchAll(/(?:["'`])((?:https?:\/\/|\/)[^"'`\s<>]+\?[^"'`\s<>]*\bv=[^"'`\s<>]+)(?:["'`])/gi)) add(match[1]);
+  for (const match of text.matchAll(/window\.LG_SITEF\s*=\s*(\{[^;]*?\})\s*;/g)) {
+    try {
+      for (const [name, version] of Object.entries(JSON.parse(match[1]))) {
+        if (typeof version !== 'string') continue;
+        const path = name.startsWith('@') ? `/c/${new URL(baseUrl).pathname.split('/')[2]}/${name.slice(1)}` : name.startsWith('/') ? name : `/site/${name}`;
+        add(`${path}?v=${encodeURIComponent(version)}`);
+      }
+    } catch { /* Ignore an invalid map. */ }
+  }
   return [...urls];
 }
 
@@ -50,6 +60,7 @@ async function requestWithRedirects(rawUrl, cookie, origin, fetchImpl, maxRedire
       const location = response.headers.get('location');
       if (!location) return { response, finalUrl: current };
       current = new URL(location, current).toString();
+      if (/(?:^|\/)(?:login|auth)(?:\/|$)/i.test(new URL(current).pathname)) throw new SnapshotSessionExpired();
       continue;
     }
     return { response, finalUrl: current };
