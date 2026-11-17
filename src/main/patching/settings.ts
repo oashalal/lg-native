@@ -4,6 +4,21 @@ export type SettingValue = boolean | string | number;
 export interface PatchOverride { enabled: boolean; values: Record<string, SettingValue>; }
 export type PatchOverrides = Record<string, PatchOverride>;
 
+export function isPublicSetting(spec: { public?: boolean; secret?: boolean; visibility?: 'public' | 'secret' }): boolean {
+  return spec.secret !== true && spec.visibility === 'public' || spec.secret !== true && spec.public === true;
+}
+
+export function publicSettings(manifest: PatchManifest): Record<string, SettingValue> {
+  const schema = manifest.settingsSchema ?? {};
+  const result: Record<string, SettingValue> = {};
+  for (const [key, spec] of Object.entries(schema)) {
+    if (!isPublicSetting(spec)) continue;
+    const value = manifest.settings[key] ?? spec.default;
+    if (typeof value === 'boolean' || typeof value === 'string' || typeof value === 'number') result[key] = value;
+  }
+  return result;
+}
+
 export function validateOverride(manifest: PatchManifest, input: unknown): PatchOverride {
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('invalid-patch-settings');
   const data = input as { enabled?: unknown; values?: unknown };

@@ -13,7 +13,7 @@ const bridge = {
   notify: (title: string, body: string) => ipcRenderer.invoke('lgx:notify', { title, body }).then(() => undefined),
   openWindow: (url: string) => ipcRenderer.invoke('lgx:open-window', { url }).then(() => undefined),
 };
-contextBridge.exposeInMainWorld('__lgNative', bridge);
+if (process.isMainFrame && location.origin === 'https://legiongame.gg') contextBridge.exposeInMainWorld('__lgNative', bridge);
 
 function printPatchReport(attempt = 0): void {
   void bridge.patchReport().then((reports) => {

@@ -31,9 +31,9 @@ export const patchManifestSchema = z.object({
   onFail: z.enum(['disable', 'original']).default('disable'),
   settings: z.record(z.string(), z.unknown()).default({}),
   settingsSchema: z.record(z.string().regex(/^[a-zA-Z][a-zA-Z0-9_]*$/).refine((key) => key !== 'script', 'reserved-setting'), z.discriminatedUnion('type', [
-    z.object({ type: z.literal('boolean'), label: z.string().min(1), default: z.boolean(), description: z.string().optional() }),
-    z.object({ type: z.literal('string'), label: z.string().min(1), default: z.string().max(4096), description: z.string().optional(), maxLength: z.number().int().min(1).max(4096).default(512) }).refine((value) => value.default.length <= value.maxLength, 'invalid-default'),
-    z.object({ type: z.literal('number'), label: z.string().min(1), default: z.number().finite(), description: z.string().optional(), min: z.number().finite().optional(), max: z.number().finite().optional() }).refine((value) => (value.min === undefined || value.default >= value.min) && (value.max === undefined || value.default <= value.max), 'invalid-default'),
+    z.object({ type: z.literal('boolean'), label: z.string().min(1), default: z.boolean(), description: z.string().optional(), public: z.boolean().default(false), secret: z.boolean().default(false), visibility: z.enum(['public', 'secret']).default('secret') }),
+    z.object({ type: z.literal('string'), label: z.string().min(1), default: z.string().max(4096), description: z.string().optional(), maxLength: z.number().int().min(1).max(4096).default(512), public: z.boolean().default(false), secret: z.boolean().default(false), visibility: z.enum(['public', 'secret']).default('secret') }).refine((value) => value.default.length <= value.maxLength, 'invalid-default'),
+    z.object({ type: z.literal('number'), label: z.string().min(1), default: z.number().finite(), description: z.string().optional(), min: z.number().finite().optional(), max: z.number().finite().optional(), public: z.boolean().default(false), secret: z.boolean().default(false), visibility: z.enum(['public', 'secret']).default('secret') }).refine((value) => (value.min === undefined || value.default >= value.min) && (value.max === undefined || value.default <= value.max), 'invalid-default'),
   ])).default({}),
   network: networkSchema,
 });

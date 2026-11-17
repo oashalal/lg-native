@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseManifest } from '../src/shared/manifest.js';
-import { applyOverride, validateOverride } from '../src/main/patching/settings.js';
+import { applyOverride, publicSettings, validateOverride } from '../src/main/patching/settings.js';
 
 const manifest = parseManifest({ id: 'settings-example', name: 'Example', version: '1', type: 'runtime', settings: { internal: 1 }, settingsSchema: { label: { type: 'string', label: 'Label', default: 'Test', maxLength: 8 }, show: { type: 'boolean', label: 'Show', default: true }, count: { type: 'number', label: 'Count', default: 2, min: 1, max: 5 } } });
 describe('patch settings', () => {
@@ -15,5 +15,9 @@ describe('patch settings', () => {
   });
   it('rejects invalid manifest defaults', () => {
     expect(() => parseManifest({ id: 'bad', name: 'Bad', version: '1', type: 'runtime', settingsSchema: { field: { type: 'number', label: 'Field', min: 2, default: 1 } } })).toThrow();
+  });
+  it('exposes only explicitly public settings to the page', () => {
+    const configured = parseManifest({ ...manifest, settings: { label: 'public', show: false, count: 4, secret: 'token' }, settingsSchema: { label: { type: 'string', label: 'Label', default: 'Test', maxLength: 8, public: true }, show: { type: 'boolean', label: 'Show', default: true }, count: { type: 'number', label: 'Count', default: 2, visibility: 'public' }, secret: { type: 'string', label: 'Secret', default: 'hidden', secret: true, public: true } } });
+    expect(publicSettings(configured)).toEqual({ label: 'public', count: 4 });
   });
 });

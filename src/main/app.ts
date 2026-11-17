@@ -11,7 +11,8 @@ import { parse as parseJavaScript } from 'acorn';
 import { ReportLog } from './patching/report-log.js';
 import { fetchForPatch, type FetchRequest } from './net/network-policy.js';
 import { randomBytes } from 'node:crypto';
-import { applyOverride, validateOverride, type PatchOverrides } from './patching/settings.js';
+import { applyOverride, publicSettings, validateOverride, type PatchOverrides } from './patching/settings.js';
+import { NotificationGate, parseNotify, publicPatchReports } from './ipc/page-bridge.js';
 
 const GAME_ORIGIN = 'https://legiongame.gg';
 const channel = process.env.LG_CHANNEL ?? process.argv.find((arg) => arg.startsWith('--channel='))?.slice('--channel='.length) ?? '5opka';
@@ -33,36 +34,54 @@ let settingsWindow: BrowserWindow | undefined;
 let serverUrl: string | undefined;
 let patchOverrides: PatchOverrides = {};
 const settingsFile = join(profile, 'patch-settings.json');
+const notificationGates = new WeakMap<Electron.WebContents, NotificationGate>();
 
 function isAllowedNavigation(raw: string): boolean {
   try { const url = new URL(raw); return url.origin === GAME_ORIGIN || url.hostname.endsWith('.twitch.tv') || url.hostname === 'twitch.tv'; } catch { return false; }
 }
 
-async function fetchSite(request: Request, ses: Electron.Session): Promise<Response> {
+export function buildResponse(body: BodyInit | null, original: Headers, init: ResponseInit = {}): Response {
+  const headers = new Headers();
+  for (const name of ['content-type', 'cache-control', 'etag', 'last-modified']) {
+    const value = original.get(name);
+    if (value) headers.set(name, value);
+  }
+  return new Response(body, { ...init, headers });
+}
+
+function contentTypeForPath(pathname: string): string | undefined {
+  const ext = pathname.toLowerCase().split('.').pop();
+  return ({ svg: 'image/svg+xml', png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', ico: 'image/x-icon', woff2: 'font/woff2', woff: 'font/woff', ttf: 'font/ttf', js: 'application/javascript', css: 'text/css' } as Record<string, string | undefined>)[ext ?? ''];
+}
+
+export async function fetchSite(request: Request, ses: Electron.Session): Promise<Response> {
   const url = new URL(request.url);
   const networkFetch = (): Promise<Response> => ses.fetch(request, { bypassCustomProtocolHandlers: true, redirect: 'follow', credentials: 'include' });
   if (url.origin !== GAME_ORIGIN || isPassthroughPath(url)) return fetchPassthrough(request, ses);
   if (isVersionedAsset(url)) {
-    const cached = await cache.get(url.toString());
+    const cached = await cache.getRecord(url.toString());
     if (cached) {
-      if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return new Response(new Uint8Array(cached));
+      const contentType = cached.contentType ?? contentTypeForPath(url.pathname);
+      const headers = new Headers(contentType ? { 'content-type': contentType } : {});
+      if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return buildResponse(new Uint8Array(cached.body), headers);
       if (url.pathname === '/site/app.js') runtimeHostSeen = true;
-      const result = engine.applyToFile({ path: url.pathname, content: cached.toString('utf8'), siteVer, channel, page: `/c/${channel}/` });
+      const result = engine.applyToFile({ path: url.pathname, content: cached.body.toString('utf8'), siteVer, channel, page: `/c/${channel}/` });
       result.report.fileVer = url.searchParams.get('v') ?? 'unknown';
       await recordPatchReport(result.report);
-      return new Response(result.content, { headers: { 'content-type': url.pathname.endsWith('.css') ? 'text/css' : 'application/javascript', 'x-lg-cache': 'hit' } });
+      return buildResponse(result.content, headers);
     }
   }
   const response = await networkFetch();
-  if (!response.ok) return response;
+  if (!response.ok || response.status === 304) return response;
+  if (response.status === 204 || response.status === 205) return buildResponse(null, response.headers, { status: response.status });
   const body = Buffer.from(await response.arrayBuffer());
-  if (isVersionedAsset(url)) await cache.put(url.toString(), body);
-  if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return new Response(new Uint8Array(body), { status: response.status, headers: response.headers });
+  if (isVersionedAsset(url)) await cache.put(url.toString(), body, response.headers.get('content-type') ?? undefined);
+  if (!url.pathname.endsWith('.js') && !url.pathname.endsWith('.css')) return buildResponse(new Uint8Array(body), response.headers, { status: response.status });
   if (url.pathname === '/site/app.js') runtimeHostSeen = true;
   const result = engine.applyToFile({ path: url.pathname, content: body.toString('utf8'), siteVer, channel, page: `/c/${channel}/` });
   result.report.fileVer = url.searchParams.get('v') ?? 'unknown';
   await recordPatchReport(result.report);
-  return new Response(result.content, { status: response.status, headers: { 'content-type': response.headers.get('content-type') ?? 'text/plain' } });
+  return buildResponse(result.content, response.headers, { status: response.status });
 }
 
 /** Forward auth and external-origin requests through Chromium while preserving redirects. */
@@ -176,7 +195,7 @@ async function runIsolatedPatches(contents: Electron.WebContents): Promise<void>
   for (const patch of capabilities.values()) {
     const { manifest, script, worldId } = patch;
     if (!eligible(manifest, url.pathname)) continue;
-    const settings = JSON.stringify(manifest.settings, (key, value: unknown) => key === 'script' ? undefined : value);
+    const settings = JSON.stringify(publicSettings(manifest));
     const code = `(async () => { const settings = ${settings}; for (const requirement of ${JSON.stringify(manifest.requires)}) { if (requirement.startsWith('global:')) throw Error('isolated-global-requirement-unsupported'); const end = Date.now() + 10000; while (!(requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement))) { if (Date.now() >= end) throw Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } ${script}\n})()`;
     let entry: { patchId: string; status: 'applied' | 'failed'; siteVer: string; reason?: string };
     try { await contents.executeJavaScriptInIsolatedWorld(worldId, [{ code }]); entry = { patchId: manifest.id, status: 'applied', siteVer }; }
@@ -233,7 +252,7 @@ function installIpc(): void {
   ipcMain.on('lgx:isolated-bootstrap', (event) => {
     event.returnValue = isGameFrame(event) ? [...capabilities].filter(([, patch]) => eligible(patch.manifest, new URL(event.senderFrame!.url).pathname)).map(([token, patch]) => ({ token, worldId: patch.worldId })) : [];
   });
-  ipcMain.handle(IPC.patchReport, () => engine.reports);
+  ipcMain.handle(IPC.patchReport, (event) => { if (!isGameFrame(event)) throw new Error('patch-report-denied'); return publicPatchReports(engine.reports); });
   ipcMain.handle('lgx:settings-load', async (event) => {
     if (event.sender !== settingsWindow?.webContents || event.senderFrame !== event.sender.mainFrame) throw new Error('settings-denied');
     return { patches: manifests.map((manifest) => ({ id: manifest.id, name: manifest.name, enabled: manifest.enabled, settings: Object.fromEntries(Object.keys(manifest.settingsSchema ?? {}).map((key) => [key, manifest.settings[key] ?? manifest.settingsSchema?.[key]?.default])), schema: manifest.settingsSchema ?? {} })), theme: await readGameTheme() };
@@ -258,7 +277,14 @@ function installIpc(): void {
     gameContents?.reloadIgnoringCache();
     return { ok: true };
   });
-  ipcMain.handle(IPC.notify, (_event, value: unknown) => { if (!value || typeof value !== 'object') throw new Error('invalid-notify'); const data = value as { title?: unknown; body?: unknown }; new Notification({ title: String(data.title ?? ''), body: String(data.body ?? '') }).show(); });
+  ipcMain.handle(IPC.notify, (event, value: unknown) => {
+    if (!isGameFrame(event)) throw new Error('notify-denied');
+    const data = parseNotify(value);
+    const gate = notificationGates.get(event.sender) ?? new NotificationGate();
+    notificationGates.set(event.sender, gate);
+    if (!gate.allow()) throw new Error('notify-rate-limit');
+    new Notification(data).show();
+  });
   ipcMain.handle(IPC.openWindow, (_event, value: unknown) => { const url = (value as { url?: unknown })?.url; if (typeof url !== 'string' || !isAllowedNavigation(url)) throw new Error('url-denied'); return shell.openExternal(url); });
   ipcMain.handle(IPC.netFetch, async (event, value: unknown) => {
     if (!isGameFrame(event) || !value || typeof value !== 'object') throw new Error('patch-network-denied');

@@ -11,7 +11,7 @@
   "onFail": "disable",
   "settings": {},
   "settingsSchema": {
-    "label": { "type": "string", "label": "Подпись кнопки", "default": "Тест", "maxLength": 24 },
-    "showMessage": { "type": "boolean", "label": "Показывать текст в окне", "default": true }
+    "label": { "type": "string", "label": "Подпись кнопки", "default": "Тест", "maxLength": 24, "public": true },
+    "showMessage": { "type": "boolean", "label": "Показывать текст в окне", "default": true, "public": true }
   }
 }
