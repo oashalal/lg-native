@@ -2,6 +2,8 @@ node_modules/
 dist/
 profiles/
 accounts/
+!src/main/accounts/
+!src/main/accounts/**
 *.log
 reports/
 .env*

@@ -18,5 +18,8 @@ try {
     return { first: first.hero.name, second: second.hero.name, value: globalThis.siteObject.value(), version: globalThis.LGX.version().siteVer, settings: globalThis.LGX.settings('e2e-hook') };
   });
   assert.deepEqual(result, { first: 'first', second: 'second', value: 15, version: '86794a1329', settings: { marker: 'enabled' } });
+  const lifecycle = await page.evaluate(async () => JSON.parse(await (await globalThis.fetch(new URL('lifecycle.json', globalThis.location.href))).text()));
+  assert.deepEqual(lifecycle, { saved: true, name: 'Renamed account', tabs: 1 });
+
   console.log('Electron LGX e2e passed');
 } finally { await app.close(); }
