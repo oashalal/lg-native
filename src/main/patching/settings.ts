@@ -4,8 +4,8 @@ export type SettingValue = boolean | string | number;
 export interface PatchOverride { enabled: boolean; values: Record<string, SettingValue>; }
 export type PatchOverrides = Record<string, PatchOverride>;
 
-export function isPublicSetting(spec: { public?: boolean; secret?: boolean; visibility?: 'public' | 'secret' }): boolean {
-  return spec.secret !== true && spec.visibility === 'public' || spec.secret !== true && spec.public === true;
+export function isPublicSetting(spec: { public?: boolean; secret?: boolean; visibility?: 'public' | 'secret' | undefined }): boolean {
+  return spec.secret !== true && spec.visibility !== 'secret' && (spec.visibility === 'public' || spec.public === true);
 }
 
 export function publicSettings(manifest: PatchManifest): Record<string, SettingValue> {

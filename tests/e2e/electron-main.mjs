@@ -8,7 +8,7 @@ app.whenReady().then(async () => {
 ipcMain.on('lgx:isolated-bootstrap', (event) => { event.returnValue = []; });
 ipcMain.handle('lgx:patch-report', () => []);
 const manifest = JSON.parse(await readFile(resolve('patches/source-expose/patch.json'), 'utf8'));
-const runtime = { id: 'e2e-hook', name: 'Hook', version: '1', type: 'runtime', settings: { marker: 'enabled', script: "LGX.hook(window.siteObject, 'value', (original) => original() + 10);" } };
+const runtime = { id: 'e2e-hook', name: 'Hook', version: '1', type: 'runtime', settingsSchema: { marker: { type: 'string', label: 'Marker', default: 'enabled', public: true } }, settings: { marker: 'enabled', script: "LGX.hook(window.siteObject, 'value', (original) => original() + 10);" } };
 const engine = new PatchEngine([manifest, runtime], [], false, { '86794a1329': { 'source-expose': 'ok' } });
 const source = `window.siteObject = { count: 2, value() { return this.count; } };
 (function() {

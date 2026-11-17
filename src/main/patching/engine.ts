@@ -96,7 +96,7 @@ export class PatchEngine {
             continue;
           }
           const requirements = JSON.stringify(manifest.requires);
-          const settings = JSON.stringify(manifest.settings, (key, value: unknown) => key === 'script' ? undefined : value);
+          const settings = JSON.stringify(publicSettings(manifest)).replace(/</g, '\\u003c');
           content += `\n;/* lg-native runtime:${manifest.id} */\n(async function(){try { const requirements = ${requirements}; for (const requirement of requirements) { const end = Date.now() + 10000; const exists = () => requirement.startsWith('global:') ? window[requirement.slice(7)] : requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement); while (!exists()) { if (Date.now() >= end) throw new Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } const settings = ${settings}; ${script}\n} catch (error) { console.error('[lg-native:${manifest.id}]', error); }})();\n`;
           entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
           continue;

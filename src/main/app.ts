@@ -255,7 +255,10 @@ function installIpc(): void {
   ipcMain.handle(IPC.patchReport, (event) => { if (!isGameFrame(event)) throw new Error('patch-report-denied'); return publicPatchReports(engine.reports); });
   ipcMain.handle('lgx:settings-load', async (event) => {
     if (event.sender !== settingsWindow?.webContents || event.senderFrame !== event.sender.mainFrame) throw new Error('settings-denied');
-    return { patches: manifests.map((manifest) => ({ id: manifest.id, name: manifest.name, enabled: manifest.enabled, settings: Object.fromEntries(Object.keys(manifest.settingsSchema ?? {}).map((key) => [key, manifest.settings[key] ?? manifest.settingsSchema?.[key]?.default])), schema: manifest.settingsSchema ?? {} })), theme: await readGameTheme() };
+    return { patches: manifests.map((manifest) => {
+      const schema = Object.fromEntries(Object.entries(manifest.settingsSchema ?? {}).filter(([, spec]) => !spec.secret && spec.visibility !== 'secret'));
+      return { id: manifest.id, name: manifest.name, enabled: manifest.enabled, settings: Object.fromEntries(Object.entries(schema).map(([key, spec]) => [key, manifest.settings[key] ?? spec.default])), schema };
+    }), theme: await readGameTheme() };
   });
   ipcMain.handle('lgx:settings-theme', async (event) => {
     if (event.sender !== settingsWindow?.webContents || event.senderFrame !== event.sender.mainFrame) throw new Error('settings-denied');
@@ -267,7 +270,10 @@ function installIpc(): void {
     for (const manifest of manifests) {
       const raw = (value as Record<string, unknown>)[manifest.id];
       if (raw === undefined) continue;
-      next[manifest.id] = validateOverride(manifest, raw);
+      const submitted = raw as { enabled?: unknown; values?: unknown };
+      const values = submitted?.values && typeof submitted.values === 'object' && !Array.isArray(submitted.values) ? submitted.values as Record<string, unknown> : {};
+      const secrets = Object.fromEntries(Object.entries(manifest.settingsSchema ?? {}).filter(([, spec]) => spec.secret || spec.visibility === 'secret').map(([key, spec]) => [key, manifest.settings[key] ?? spec.default]));
+      next[manifest.id] = validateOverride(manifest, { enabled: submitted?.enabled, values: { ...values, ...secrets } });
     }
     await mkdir(profile, { recursive: true });
     await writeFile(`${settingsFile}.tmp`, JSON.stringify(next, null, 2), { encoding: 'utf8', mode: 0o600 });
