@@ -11,7 +11,8 @@
     "test": "pnpm typecheck && vitest run",
     "start": "pnpm build && electron .",
     "test:e2e": "pnpm build && node tests/e2e/lgx.mjs",
-    "lint": "eslint src tests tools patches --ext .ts,.js,.cts,.mjs"
+    "lint": "eslint src tests tools patches --ext .ts,.js,.cts,.mjs",
+    "package:flatpak": "pnpm build && electron-builder --linux flatpak"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

@@ -1,0 +1,28 @@
+appId: gg.legiongame.LgNative
+productName: lg-native
+artifactName: lg-native-${version}.${ext}
+directories:
+  output: release
+files:
+  - dist/**
+  - src/main/native/**
+  - src/preload/**
+  - patches/**
+  - compat/**
+  - package.json
+linux:
+  category: Game
+  target:
+    - target: flatpak
+      arch:
+        - x64
+flatpak:
+  runtime: org.freedesktop.Platform
+  runtimeVersion: '24.08'
+  sdk: org.freedesktop.Sdk
+  finishArgs:
+    - --share=ipc
+    - --share=network
+    - --socket=x11
+    - --socket=wayland
+    - --device=dri
