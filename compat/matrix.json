@@ -4,5 +4,9 @@
     "css-style": "skipped",
     "runtime-live": "skipped",
     "source-expose": "ok"
+  },
+  "smoke": {
+    "css-style": "ok",
+    "runtime-live": "ok"
   }
 }

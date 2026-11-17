@@ -7,7 +7,7 @@
   "siteVersions": [],
   "strict": false,
   "scope": { "channels": ["*"], "pages": ["/c/*"] },
-  "targets": [{ "file": "/site/style.css", "replacement": ".site-head{outline:1px solid color-mix(in srgb, #8ab4ff 40%, transparent)}" }],
+  "targets": [{ "file": "/site/style.css", "replacement": ".site-head{outline:1px solid #8ab4ff}" }],
   "requires": [],
   "onFail": "disable",
   "settings": {}
