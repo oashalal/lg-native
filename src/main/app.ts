@@ -441,11 +441,11 @@ async function loadPatchManifests(): Promise<void> {
     try {
       const manifest = parseManifest(JSON.parse(await readFile(join(root, item.name, 'patch.json'), 'utf8')));
       if (manifest.type === 'runtime') {
-        let script = typeof manifest.settings.script === 'string' ? manifest.settings.script : '';
+        let script = manifest.runtime?.pageScript ?? (typeof manifest.settings.script === 'string' ? manifest.settings.script : '');
         try { script = await readFile(join(root, item.name, 'index.js'), 'utf8'); } catch { /* inline manifest script */ }
         if (!script) throw new Error('runtime script is missing');
         parseJavaScript(`(async function(){${script}\n})`, { ecmaVersion: 'latest' });
-        manifest.settings = { ...manifest.settings, script };
+         manifest.runtime = { ...manifest.runtime, pageScript: script };
       }
       const override = patchOverrides[manifest.id];
       if (loaded.some((existing) => existing.id === manifest.id)) throw new Error('duplicate-patch-id');
@@ -456,8 +456,9 @@ async function loadPatchManifests(): Promise<void> {
   if (fallbackRuntime) fallbackRuntime.engine = new PatchEngine(manifests, [], safeMode, matrix);
   capabilities.clear();
   for (const manifest of manifests) {
-    if (!safeMode && manifest.enabled && manifest.type === 'runtime' && manifest.network?.hosts.length && typeof manifest.settings.script === 'string') {
-      capabilities.set(randomBytes(32).toString('hex'), { manifest, worldId: 1000 + capabilities.size, script: manifest.settings.script });
+    const networkScript = manifest.runtime?.networkScript ?? (typeof manifest.settings.networkScript === 'string' ? manifest.settings.networkScript : undefined);
+    if (!safeMode && manifest.enabled && manifest.type === 'runtime' && manifest.network?.hosts.length && networkScript) {
+      capabilities.set(randomBytes(32).toString('hex'), { manifest, worldId: 1000 + capabilities.size, script: networkScript });
     }
   }
   for (const runtime of runtimes.values()) {
@@ -639,14 +640,15 @@ function installIpc(): void {
     const frame = gameFrameOf(event);
     if (!frame || !value || typeof value !== 'object') throw new Error('patch-network-denied');
     const { runtime } = frame;
-    const data = value as { token?: unknown; url?: unknown; options?: unknown };
+    const data = value as { token?: unknown; patchId?: unknown; url?: unknown; options?: unknown };
     const patch = typeof data.token === 'string' ? capabilities.get(data.token) : undefined;
-    if (!patch || !eligible(patch.manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname) || typeof data.url !== 'string') throw new Error('patch-network-denied');
+    const manifest = patch?.manifest ?? (typeof data.patchId === 'string' ? manifests.find((candidate) => candidate.id === data.patchId && candidate.type === 'runtime' && candidate.network?.hosts.length) : undefined);
+    if (!manifest || !eligible(manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname) || typeof data.url !== 'string') throw new Error('patch-network-denied');
     if (data.options !== undefined && (!data.options || typeof data.options !== 'object' || Array.isArray(data.options))) throw new Error('invalid-network-request');
-    const options = (data.options ?? {}) as Omit<FetchRequest, 'url'>;
-    try { return await fetchForPatch(patch.manifest, { ...options, url: data.url }, runtime.serverUrl); }
+     const options = (data.options ?? {}) as Omit<FetchRequest, 'url'>;
+     try { return await fetchForPatch(manifest, { ...options, url: data.url }, runtime.serverUrl); }
     catch (error) {
-      const report = { siteVer: runtime.siteVer, entries: [{ patchId: patch.manifest.id, status: 'failed' as const, reason: 'network-request-denied-or-failed', siteVer: runtime.siteVer }], safeMode, generatedAt: new Date().toISOString() };
+       const report = { siteVer: runtime.siteVer, entries: [{ patchId: manifest.id, status: 'failed' as const, reason: 'network-request-denied-or-failed', siteVer: runtime.siteVer }], safeMode, generatedAt: new Date().toISOString() };
       runtime.engine.record(report); void recordPatchReport(runtime, report); throw error;
     }
   });

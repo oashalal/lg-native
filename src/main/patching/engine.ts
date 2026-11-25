@@ -53,7 +53,10 @@ export class PatchEngine {
   readonly reports: PatchReport[] = [];
 
   constructor(manifests: unknown[], runtime: RuntimePatch[] = [], safeMode = false, private readonly matrix: CompatibilityMatrix = {}) {
-    this.manifests = manifests.map(parseManifest);
+    const parsed = manifests.map(parseManifest);
+    const ids = new Set<string>();
+    for (const manifest of parsed) { if (ids.has(manifest.id)) throw new Error('duplicate-patch-id'); ids.add(manifest.id); }
+    this.manifests = parsed;
     this.runtime = runtime;
     this.safeMode = safeMode;
   }
@@ -82,7 +85,7 @@ export class PatchEngine {
           if (input.path !== '/site/app.js') continue;
           // Runtime patches are local scripts. Appending them to the last application
           // bundle keeps execution in the page world while preload remains isolated.
-          const script = manifest.settings.script;
+          const script = manifest.runtime?.pageScript ?? manifest.settings.script;
           if (typeof script !== 'string' || !script.trim()) {
             entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-script-missing', siteVer: input.siteVer });
             continue;

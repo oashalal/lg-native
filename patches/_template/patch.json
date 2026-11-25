@@ -4,10 +4,13 @@
   "version": "0.1.0",
   "type": "runtime",
   "enabled": false,
-  "siteVersions": ["13ebcdcfc1"],
+  "siteVersions": [],
   "strict": false,
   "scope": { "channels": ["*"], "pages": ["/c/*"] },
   "requires": [],
   "onFail": "disable",
-  "settings": {}
+  "settings": {},
+  "settingsSchema": {
+    "label": { "type": "string", "label": "Подпись", "default": "Мой патч", "maxLength": 48, "public": true }
+  }
 }

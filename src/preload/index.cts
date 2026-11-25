@@ -12,6 +12,7 @@ const bridge = {
   patchReport: () => ipcRenderer.invoke('lgx:patch-report') as Promise<unknown[]>,
   notify: (title: string, body: string) => ipcRenderer.invoke('lgx:notify', { title, body }).then(() => undefined),
   openWindow: (url: string) => ipcRenderer.invoke('lgx:open-window', { url }).then(() => undefined),
+  netFetch: (patchId: string, url: string, signal?: AbortSignal) => ipcRenderer.invoke('lgx:net-fetch', { patchId, url, signal }),
 };
 if (process.isMainFrame && location.origin === 'https://legiongame.gg') contextBridge.exposeInMainWorld('__lgNative', bridge);
 

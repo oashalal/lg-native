@@ -1,14 +1,15 @@
 # Текущее состояние
 
-Дата: 2026-11-17. История изменений находится в [CHANGELOG.md](CHANGELOG.md).
+Дата: 2026-11-25. История изменений находится в [CHANGELOG.md](CHANGELOG.md).
 
 - Этапы 2.1–2.3 выполнены: кэш ограничен, есть реестр совместимости, LGX создаётся в мире страницы, а Electron e2e проверяет хуки, живые ссылки, версию и настройки.
 - Этап 2.4 продолжается: page bridge ограничен игровым главным кадром, уведомления ограничены по размеру и частоте, отчёты очищаются от внутренних путей; в page world передаются только публичные поля `settingsSchema`.
 - `tools/dryrun --smoke` запускает локальную Electron-фикстуру и записывает `css-style` и `runtime-live` в `compat/matrix.json`; последний прогон дал `ok` для обоих.
 - `tools/snapshot` получает версию с `/site/ver` и проверяет `LG_SITEF`; полнота обнаружения ресурсов остальных карт ещё не подтверждена.
-- CSS, source, AST и runtime-патчи работают; native-патчи остаются в разработке. Профили и вкладки реализованы в main-процессе, включая отдельные Session, сохранение, восстановление и безопасную очистку; ручные проверки с двумя реальными аккаунтами, OAuth, WS/SSE и конкурентной диагностикой ещё требуются.
+- CSS, source, AST и runtime-патчи работают; native-патчи остаются в разработке. Page runtime получил LGX cleanup/theme/mount/modal helpers, а network policy ограничена JSON GET capability без cookies и auth headers. Профили и вкладки реализованы в main-процессе, включая отдельные Session, сохранение, восстановление и безопасную очистку; ручные проверки с двумя реальными аккаунтами, OAuth, WS/SSE и конкурентной диагностикой ещё требуются.
 - Flatpak-конфигурация добавлена в `electron-builder.yml`; сборка прошла до последних исправлений интерфейса.
 - Авторизованная игра, OAuth, WebGL, WS/SSE и показатели производительности требуют ручной проверки. Этап 3 не начинался.
 - Ручная проверка подтвердила переключение вкладок и создание нового аккаунта. State contract toolbar: `tabs({action, value?, name?})` возвращает `{ok, state}`, где `state` содержит `activeTabId`, `activeProfileId`, `tabs` (`id`, `profileId`, `name`, `active`, `status`, `error?`) и `profiles` (`id`, `name`, `saved`, `active`, `tabCount`).
 - Проверено автоматически: Electron E2E fixture (`pnpm test:e2e`) покрывает LGX/изоляцию тестового контекста и локальный `AccountHub` lifecycle (temporary → saved → rename, второй профиль с открытой вкладкой → delete, отсутствие записи и вкладок после удаления). Fixture не поднимает toolbar/WebContentsView и не проверяет реальный IPC или Chromium storage.
 - Непроверено вручную: вход и logout двух реальных аккаунтов, OAuth/redirect, живые WS/SSE в фоновой вкладке, сохранение cookies/localStorage после save, rename/delete с открытыми вкладками, удаление `default`, восстановление после перезапуска, медленное открытие, последняя временная вкладка, narrow window и mouse/keyboard/screen-reader сценарии. Эти пункты нельзя считать пройденными по smoke-тесту.
+- Документация текущего контракта патчей находится в [PATCHES.md](PATCHES.md). `native`, удалённая доставка, server auth, POST/WS/SSE network API, полноценный scheduler `runtime.updateMs` и полная capability revocation пока не реализованы.

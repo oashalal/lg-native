@@ -91,3 +91,11 @@ Runtime-патчи, объявляющие сетевые хосты, испол
 Решение: движок вставляет `installPageLGX` в начало обработанного `/site/app.js`, если в файл внедрён хотя бы один патч. LGX, хранилище ссылок и хуки живут в мире страницы до выполнения исходного кода сайта; `expose(name, value)` обновляет значение, `expose(name)` и `get(name)` его читают. Версия и настройки передаются при обработке файла; исполняемый текст патчей в настройки не включается. Preload предоставляет отдельный узкий IPC-мост для отчёта и нативных вызовов. Сетевые патчи сохраняют отдельный изолированный мир и свои полномочия.
 
 Последствия: LGX не создаётся без внедрённых в app.js патчей, включая safe mode. Для новой загрузки страницы создаётся новый экземпляр; runtime-эффекты не отменяются автоматически. Проверка в Electron использует тестовую страницу, поэтому поведение с авторизованной игрой остаётся для ручной проверки.
+
+## 2026-11-25 — Фактический контракт составного runtime-патча
+
+Page и network части runtime-патча разделены по execution world. `runtime.pageScript` работает в page world и может видеть DOM и публичные `window.LG*`; `runtime.networkScript` работает в isolated world и получает только заранее объявленный network capability. Legacy `settings.script` и `index.js` сохраняются как fallback для page script.
+
+Network capability принимает только GET. Main проверяет origin/frame/scope/compatibility, host и endpoint allowlist, HTTPS (HTTP только localhost), redirect limit, timeout, размер body и JSON content type. Cookies, credentials, authorization и произвольные чувствительные заголовки запрещены. Capability token не передаётся в page world; page вызов связывается с patch id и проверяется на каждом IPC-вызове.
+
+Последствия: сетевой runtime не может использовать игровые cookies или выполнять ответ как код. `runtime.updateMs` пока только поле контракта; автоматическое обновление engine не реализует. Native остаётся предсказуемым skipped до отдельной реализации.
