@@ -1,12 +1,12 @@
 import { app, BrowserWindow, Menu, net, shell, Tray, nativeImage, ipcMain, Notification, WebContentsView, dialog } from 'electron';
 import { join } from 'node:path';
-import { readFile, readdir, writeFile, mkdir, rename, stat } from 'node:fs/promises';
+import { readFile, readdir, writeFile, mkdir, rename, stat, realpath } from 'node:fs/promises';
 import { CacheStore, isPassthroughPath, isVersionedAsset } from './net/cache.js';
 import { IPC } from './ipc/channels.js';
 import { PatchEngine } from './patching/engine.js';
 import { compatibility, parseMatrix, type CompatibilityMatrix } from './patching/compat.js';
 import { restoreGameApiOrigin } from './net/origin.js';
-import { parseManifest, type PatchManifest } from '../shared/manifest.js';
+import { parseManifest, type PatchManifest, type ScriptSource } from '../shared/manifest.js';
 import { parse as parseJavaScript } from 'acorn';
 import { ReportLog } from './patching/report-log.js';
 import { fetchForPatch, type FetchRequest } from './net/network-policy.js';
@@ -14,23 +14,45 @@ import { randomBytes } from 'node:crypto';
 import { applyOverride, publicSettings, validateOverride, type PatchOverrides } from './patching/settings.js';
 import { NotificationGate, parseNotify, publicPatchReports } from './ipc/page-bridge.js';
 import { AccountHub, type AccountProfile } from './accounts/index.js';
+import { createUI } from '../runtime/ui.js';
+import { createNet } from '../runtime/net.js';
+import { installChannel } from '../runtime/channel.js';
 
 const GAME_ORIGIN = 'https://legiongame.gg';
-const channel = process.env.LG_CHANNEL ?? process.argv.find((arg) => arg.startsWith('--channel='))?.slice('--channel='.length) ?? '5opka';
+const channel = process.env.LG_CHANNEL ?? process.argv.find((arg) => arg.startsWith('--channel='))?.slice('--channel='.length) ?? 'zakvielchannel';
 const safeMode = process.argv.includes('--safe-mode');
 const userData = app.getPath('userData');
 const defaultProfileDir = join(userData, 'profiles', 'default');
 const settingsFile = join(defaultProfileDir, 'patch-settings.json');
 const reportFile = join(defaultProfileDir, 'reports', 'patches.jsonl');
 type ProfileRuntime = { id: string; name: string; directory: string; ses: Electron.Session; cache: CacheStore; reportLog: ReportLog; engine: PatchEngine; siteVer: string; serverUrl: string | undefined; runtimeHostSeen: boolean; protocolInstalled: boolean };
-type TabRuntime = { id: string; profileId: string; view?: WebContentsView; url: string; active: boolean; status: 'loading' | 'ready' | 'error'; error?: string | undefined };
+type TabRuntime = { id: string; profileId: string; view?: WebContentsView; url: string; active: boolean; status: 'loading' | 'ready' | 'error'; error?: string | undefined; documentGeneration: number };
 const runtimes = new Map<string, ProfileRuntime>();
 const tabs = new Map<string, TabRuntime>();
 let activeTabId: string | undefined;
 let tray: Tray | undefined;
 let matrix: CompatibilityMatrix = {};
 let manifests: PatchManifest[] = [];
-const capabilities = new Map<string, { manifest: PatchManifest; worldId: number; script: string }>();
+type Capability = { manifest: PatchManifest; worldId: number; script: string; sender?: Electron.WebContents; tabId?: string; profileId?: string; generation?: number; frame?: Electron.WebFrameMain };
+type ActiveRequest = { owner: Capability; requestId: string; controller: AbortController };
+const capabilities = new Map<string, Capability>();
+const activeRequests = new Map<string, ActiveRequest>();
+const issuedCapabilities = new WeakMap<Electron.WebContents, Map<string, Capability>>();
+
+function revokeCapabilitiesFor(contents: Electron.WebContents, tabId?: string): void {
+  const issued = issuedCapabilities.get(contents);
+  if (!issued) return;
+  for (const [token, capability] of issued) {
+    if (tabId && capability.tabId !== tabId) continue;
+    issued.delete(token);
+    capabilities.delete(token);
+    for (const request of activeRequests.values()) if (request.owner === capability) request.controller.abort();
+  }
+}
+
+function inlineSource(source: ScriptSource | undefined): string | undefined {
+  return typeof source === 'string' ? source : undefined;
+}
 let toolbarContents: Electron.WebContents | undefined;
 let toolbarView: WebContentsView | undefined;
 let settingsWindow: BrowserWindow | undefined;
@@ -198,11 +220,18 @@ function createView(profileId: string, url: string, tabId?: string): WebContents
 function bindView(view: WebContentsView, profileId: string, url: string, requestedTabId?: string): void {
   const tabId = requestedTabId ?? randomBytes(8).toString('hex');
   const existing = tabs.get(tabId);
-  const tab: TabRuntime = existing ?? { id: tabId, profileId, view, url, active: false, status: 'loading' };
+  const tab: TabRuntime = existing ?? { id: tabId, profileId, view, url, active: false, status: 'loading', documentGeneration: 0 };
   tab.view = view;
   tabs.set(tabId, tab);
   if (!existing) hub.createTab(profileId, url, tabId);
   view.webContents.setWindowOpenHandler(({ url: openUrl }) => { if (isAllowedNavigation(openUrl)) return { action: 'allow' }; void shell.openExternal(openUrl); return { action: 'deny' }; });
+  view.webContents.on('did-start-navigation', (_event, _url, _inPlace, isMainFrame) => {
+    if (!isMainFrame) return;
+    revokeCapabilitiesFor(view.webContents, tabId);
+    const current = tabs.get(tabId);
+    if (current) current.documentGeneration++;
+  });
+  view.webContents.on('destroyed', () => revokeCapabilitiesFor(view.webContents, tabId));
   view.webContents.on('will-navigate', (event, navigateUrl) => { if (!isAllowedNavigation(navigateUrl)) event.preventDefault(); });
   view.webContents.on('did-finish-load', async () => {
     const current = tabs.get(tabId);
@@ -227,7 +256,7 @@ function bindView(view: WebContentsView, profileId: string, url: string, request
 function registerPendingTab(profileId: string, url: string, makeActive: boolean, requestedTabId?: string): TabRuntime {
   const id = requestedTabId ?? randomBytes(8).toString('hex');
   const shouldActivate = makeActive || activeTabId === undefined;
-  const tab: TabRuntime = { id, profileId, url, active: false, status: 'loading' };
+  const tab: TabRuntime = { id, profileId, url, active: false, status: 'loading', documentGeneration: 0 };
   tabs.set(id, tab);
   hub.createTab(profileId, url, id);
   if (shouldActivate) activateTab(id);
@@ -336,13 +365,19 @@ async function runIsolatedPatches(view: WebContentsView, profileRuntime: Profile
   let url: URL;
   try { url = new URL(view.webContents.getURL()); } catch { return; }
   if (url.origin !== GAME_ORIGIN) return;
-  for (const patch of capabilities.values()) {
+  const tab = [...tabs.values()].find((candidate) => candidate.view === view);
+  if (!tab) return;
+  for (const patch of issuedCapabilities.get(view.webContents)?.values() ?? []) {
     const { manifest, script, worldId } = patch;
     if (!eligible(manifest, profileRuntime.siteVer, url.pathname)) continue;
     const settings = JSON.stringify(publicSettings(manifest));
-    const code = `(async () => { const settings = ${settings}; for (const requirement of ${JSON.stringify(manifest.requires)}) { if (requirement.startsWith('global:')) throw Error('isolated-global-requirement-unsupported'); const end = Date.now() + 10000; while (!(requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement))) { if (Date.now() >= end) throw Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } ${script}\n})()`;
+    const code = `(async () => { const settings = ${settings}; const cleanups = new Set(); const onCleanup = fn => { cleanups.add(fn); return () => cleanups.delete(fn); }; const dispose = () => { for (const fn of [...cleanups]) { try { fn(); } catch {} } cleanups.clear(); }; addEventListener('pagehide', dispose, { once: true }); const ui = (${createUI.toString()})(${JSON.stringify(manifest.id)}, settings, onCleanup); const channel = (${installChannel.toString()})(${JSON.stringify(manifest.id)}, '', 'isolated'); onCleanup(channel.close); const LGX = { ...globalThis.LGX, ...ui, channel, ui: { text: ui.text, jsonView: ui.jsonView }, onCleanup, dispose, net: (${createNet.toString()})(globalThis.LGX.net, onCleanup) }; for (const requirement of ${JSON.stringify(manifest.requires)}) { if (requirement.startsWith('global:')) throw Error('isolated-global-requirement-unsupported'); const end = Date.now() + 10000; while (!(requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement))) { if (Date.now() >= end) throw Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } ${script}\n})()`;
     let entry: { patchId: string; status: 'applied' | 'failed'; siteVer: string; reason?: string };
-    try { await view.webContents.executeJavaScriptInIsolatedWorld(worldId, [{ code }]); entry = { patchId: manifest.id, status: 'applied', siteVer: profileRuntime.siteVer }; }
+    try {
+      if (patch.tabId !== tab.id || patch.generation !== tab.documentGeneration || patch.frame !== view.webContents.mainFrame) continue;
+      await view.webContents.executeJavaScriptInIsolatedWorld(worldId, [{ code }]);
+      entry = { patchId: manifest.id, status: 'applied', siteVer: profileRuntime.siteVer };
+    }
     catch (error) { entry = { patchId: manifest.id, status: 'failed', siteVer: profileRuntime.siteVer, reason: error instanceof Error ? error.message : String(error) }; }
     const report = { siteVer: profileRuntime.siteVer, entries: [entry], safeMode, generatedAt: new Date().toISOString(), path: url.pathname };
     profileRuntime.engine.record(report); await recordPatchReport(profileRuntime, report);
@@ -441,11 +476,24 @@ async function loadPatchManifests(): Promise<void> {
     try {
       const manifest = parseManifest(JSON.parse(await readFile(join(root, item.name, 'patch.json'), 'utf8')));
       if (manifest.type === 'runtime') {
-        let script = manifest.runtime?.pageScript ?? (typeof manifest.settings.script === 'string' ? manifest.settings.script : '');
-        try { script = await readFile(join(root, item.name, 'index.js'), 'utf8'); } catch { /* inline manifest script */ }
-        if (!script) throw new Error('runtime script is missing');
-        parseJavaScript(`(async function(){${script}\n})`, { ecmaVersion: 'latest' });
-         manifest.runtime = { ...manifest.runtime, pageScript: script };
+         const patchDir = join(root, item.name);
+         const loadSource = async (source: ScriptSource | undefined, fallback?: string): Promise<string | undefined> => {
+           const selected = source ?? fallback;
+           if (typeof selected === 'string') return selected;
+           if (!selected) return undefined;
+           if (selected.file.includes('..') || selected.file.startsWith('/') || selected.file.includes('\\')) throw new Error('runtime-source-path-denied');
+           const path = join(patchDir, selected.file);
+           const [base, resolvedPath, resolved] = await Promise.all([realpath(patchDir), realpath(path), stat(path)]);
+           if (!resolved.isFile() || (resolvedPath !== base && !resolvedPath.startsWith(`${base}/`))) throw new Error('runtime-source-path-denied');
+           return readFile(path, 'utf8');
+         };
+         const pageFallback = typeof manifest.settings.script === 'string' ? manifest.settings.script : await readFile(join(patchDir, 'index.js'), 'utf8').catch(() => undefined);
+         const pageScript = await loadSource(manifest.runtime?.pageScript, pageFallback);
+         const networkScript = await loadSource(manifest.runtime?.networkScript, typeof manifest.settings.networkScript === 'string' ? manifest.settings.networkScript : undefined);
+         if (!pageScript && !networkScript) throw new Error('runtime script is missing');
+         if (pageScript) parseJavaScript(`(async function(){${pageScript}\n})`, { ecmaVersion: 'latest' });
+         if (networkScript) parseJavaScript(`(async function(){${networkScript}\n})`, { ecmaVersion: 'latest' });
+         manifest.runtime = { ...manifest.runtime, ...(pageScript ? { pageScript } : {}), ...(networkScript ? { networkScript } : {}) };
       }
       const override = patchOverrides[manifest.id];
       if (loaded.some((existing) => existing.id === manifest.id)) throw new Error('duplicate-patch-id');
@@ -454,9 +502,10 @@ async function loadPatchManifests(): Promise<void> {
   }
   manifests = loaded;
   if (fallbackRuntime) fallbackRuntime.engine = new PatchEngine(manifests, [], safeMode, matrix);
-  capabilities.clear();
+  for (const contents of [...tabs.values()].map((tab) => tab.view?.webContents).filter((item): item is Electron.WebContents => !!item)) revokeCapabilitiesFor(contents);
+  for (const [token, capability] of capabilities) if (!capability.sender) capabilities.delete(token);
   for (const manifest of manifests) {
-    const networkScript = manifest.runtime?.networkScript ?? (typeof manifest.settings.networkScript === 'string' ? manifest.settings.networkScript : undefined);
+    const networkScript = inlineSource(manifest.runtime?.networkScript) ?? (typeof manifest.settings.networkScript === 'string' ? manifest.settings.networkScript : undefined);
     if (!safeMode && manifest.enabled && manifest.type === 'runtime' && manifest.network?.hosts.length && networkScript) {
       capabilities.set(randomBytes(32).toString('hex'), { manifest, worldId: 1000 + capabilities.size, script: networkScript });
     }
@@ -583,7 +632,18 @@ function installIpc(): void {
     const frame = gameFrameOf(event);
     if (!frame) { event.returnValue = []; return; }
     const { runtime } = frame;
-    event.returnValue = [...capabilities].filter(([, patch]) => eligible(patch.manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname)).map(([token, patch]) => ({ token, worldId: patch.worldId }));
+    const tab = frame.tab;
+    const result: Array<{ token: string; worldId: number }> = [];
+    for (const patch of [...capabilities.values()].filter((candidate) => !candidate.sender)) {
+      if (!eligible(patch.manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname)) continue;
+      const token = randomBytes(32).toString('hex');
+      const owner: Capability = { ...patch, sender: event.sender, tabId: tab.id, profileId: tab.profileId, generation: tab.documentGeneration, frame: event.senderFrame! };
+      capabilities.set(token, owner);
+      const issued = issuedCapabilities.get(event.sender) ?? new Map<string, Capability>();
+      issued.set(token, owner); issuedCapabilities.set(event.sender, issued);
+      result.push({ token, worldId: patch.worldId });
+    }
+    event.returnValue = result;
   });
   ipcMain.handle(IPC.patchReport, (event) => {
     const frame = gameFrameOf(event);
@@ -639,18 +699,30 @@ function installIpc(): void {
   ipcMain.handle(IPC.netFetch, async (event, value: unknown) => {
     const frame = gameFrameOf(event);
     if (!frame || !value || typeof value !== 'object') throw new Error('patch-network-denied');
-    const { runtime } = frame;
-    const data = value as { token?: unknown; patchId?: unknown; url?: unknown; options?: unknown };
+    const { runtime, tab } = frame;
+    const data = value as { token?: unknown; url?: unknown; options?: unknown };
     const patch = typeof data.token === 'string' ? capabilities.get(data.token) : undefined;
-    const manifest = patch?.manifest ?? (typeof data.patchId === 'string' ? manifests.find((candidate) => candidate.id === data.patchId && candidate.type === 'runtime' && candidate.network?.hosts.length) : undefined);
-    if (!manifest || !eligible(manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname) || typeof data.url !== 'string') throw new Error('patch-network-denied');
+    const manifest = patch?.manifest;
+    if (!manifest || patch.sender !== event.sender || patch.frame !== event.senderFrame || patch.tabId !== tab.id || patch.profileId !== tab.profileId || patch.generation !== tab.documentGeneration || patch.worldId === undefined || !eligible(manifest, runtime.siteVer, new URL(event.senderFrame!.url).pathname) || typeof data.url !== 'string') throw new Error('patch-network-denied');
     if (data.options !== undefined && (!data.options || typeof data.options !== 'object' || Array.isArray(data.options))) throw new Error('invalid-network-request');
-     const options = (data.options ?? {}) as Omit<FetchRequest, 'url'>;
-     try { return await fetchForPatch(manifest, { ...options, url: data.url }, runtime.serverUrl); }
-    catch (error) {
-       const report = { siteVer: runtime.siteVer, entries: [{ patchId: manifest.id, status: 'failed' as const, reason: 'network-request-denied-or-failed', siteVer: runtime.siteVer }], safeMode, generatedAt: new Date().toISOString() };
-      runtime.engine.record(report); void recordPatchReport(runtime, report); throw error;
-    }
+      const options = (data.options ?? {}) as Omit<FetchRequest, 'url'> & { requestId?: unknown };
+      const requestId = typeof options.requestId === 'string' && options.requestId.length > 0 && options.requestId.length <= 128 ? options.requestId : randomBytes(16).toString('hex');
+      const key = `${data.token}:${requestId}`;
+      if (activeRequests.has(key)) throw new Error('duplicate-network-request');
+      const controller = new AbortController();
+      const active: ActiveRequest = { owner: patch, requestId, controller };
+      activeRequests.set(key, active);
+      try { return await fetchForPatch(manifest, { ...options, url: data.url, signal: controller.signal }, runtime.serverUrl); }
+      finally { if (activeRequests.get(key) === active) activeRequests.delete(key); }
+  });
+  ipcMain.handle(IPC.netAbort, (event, value: unknown) => {
+     if (!value || typeof value !== 'object') throw new Error('network-abort-denied');
+     const data = value as { requestId?: unknown; token?: unknown };
+     if (typeof data.requestId !== 'string' || typeof data.token !== 'string') throw new Error('network-abort-denied');
+     const request = activeRequests.get(`${data.token}:${data.requestId}`);
+     if (!request || request.owner.sender !== event.sender || request.owner.frame !== event.senderFrame || request.controller.signal.aborted) throw new Error('network-abort-denied');
+     request.controller.abort();
+     return { ok: true };
   });
 }
 

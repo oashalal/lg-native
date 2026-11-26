@@ -267,18 +267,25 @@ LGX.dispose();
 
 `LGX.modal(id, nodeOrHtml)` создаёт overlay с `role="dialog"`, `aria-modal`, focus trap, Escape, закрытием по backdrop, scroll lock и возвратом фокуса. Возвращается объект `{ element, close }`.
 
+Строковые аргументы этих методов интерпретируются как HTML и не подходят для непроверенных внешних данных. Для данных ответа создавайте DOM-узлы и задавайте текст через `textContent`.
+
 Текущая сигнатура сетевого метода:
 
 ```js
 const response = await LGX.net.fetch(
-  'my-patch',
   'https://api.example.com/data',
   { signal: abortController.signal }
 );
 const data = JSON.parse(response.body);
 ```
 
-`LGX.net.fetch` является capability API. Не принимайте URL от пользователя или DOM; используйте заранее известные endpoint.
+`LGX.net.fetch` доступен только в isolated world. Происхождение строки URL установить невозможно: безопасность зависит от ограничений host, path и query в main, а не от того, получена ли строка из DOM. Используйте заранее известные endpoint.
+
+`await LGX.net.json(target, options?)` возвращает разобранный JSON и отклоняет ответ вне 2xx с `bad-status:<status>`, а невалидный JSON с `invalid-json`. `LGX.net.poll(target, ms, callback, options?)` немедленно выполняет первый JSON-запрос, затем ждёт не менее 250 мс после завершения каждого запроса. Параллельных запросов одного опроса нет; callback получает разобранное значение, ошибки пишутся в журнал и не останавливают опрос. Возвращённая `stop()` идемпотентно останавливает таймер и отменяет активный запрос. Опрос также останавливается при cleanup и уходе документа. Не используйте `runtime.updateMs` для его настройки.
+
+В обеих частях доступны `ready`, `settings`, `theme`, `mount(id, nodeOrHtml)`, `modal(id, nodeOrHtml)`, `hud.button(id, label, handler)`, `ui.text(value)`, `ui.jsonView(value)` и `onCleanup(fn)`. В isolated world `ready` принимает только CSS-селектор, а `settings()` возвращает публичные настройки своего патча. `ui.text` и `ui.jsonView` создают текстовые узлы, не HTML. HUD-кнопка восстанавливается при пересоздании HUD; зарегистрированные ресурсы удаляются при cleanup.
+
+В page- и network-скриптах одного патча `LGX.channel.send(value)` отправляет JSON в другую среду, а `LGX.channel.on(handler)` возвращает функцию отписки. Сообщения ограничены 64 КиБ UTF-8, глубиной 8 и частотой 30 в секунду; подписки очищаются с экземпляром патча. Транспорт ограничен документом и идентификатором патча, но **не обеспечивает секретность или подлинность**: сайт может читать и подделывать сообщения. Проверяйте структуру и значения на стороне network-скрипта и не создавайте универсальный сетевой прокси по командам страницы.
 
 ## 7. Network runtime
 
@@ -294,9 +301,8 @@ Network runtime запускается в isolated world. Он получает 
   "type": "runtime",
   "enabled": true,
   "runtime": {
-    "networkScript": "network.js",
-    "pageScript": "index.js",
-    "updateMs": 60000
+    "networkScript": { "file": "network.js" },
+    "pageScript": { "file": "index.js" }
   },
   "network": {
     "hosts": ["api.example.com"],
@@ -308,19 +314,22 @@ Network runtime запускается в isolated world. Он получает 
 }
 ```
 
-В текущем loader `runtime.networkScript` должен быть передан как содержимое скрипта; если используется файловая структура, итоговый `index.js`/сборщик должен обеспечить чтение и регистрацию этого содержимого. Network IPC проверяет sender, игровой origin, main frame, scope, enabled и allowlist.
+Строка в `runtime.networkScript` или `runtime.pageScript` означает исходный код, а не имя файла; для файла используется объект `{ "file": "..." }` с путём внутри каталога патча. Page- и network-части необязательны и выполняются в разных мирах. `settings.script` и `index.js` остаются fallback для page-части, `settings.networkScript` для network-части. `runtime.updateMs` не запускает опрос автоматически.
 
 Ограничения запроса:
 
 - только `GET`;
 - HTTPS обязателен, HTTP разрешён только для `localhost`, `127.0.0.1`, `[::1]`;
 - host должен быть в `network.hosts`;
-- при наличии `network.endpoints` path должен быть в этом списке;
+- нестандартный порт указывается явно вместе с host, например `127.0.0.1:8080`; `$serverUrl` разрешает только точный origin профильной конфигурации;
+- path должен точно совпадать с одним из `network.endpoints`; пустой или отсутствующий список запрещает все запросы, в том числе у старых манифестов;
+- query-параметры должны быть явно описаны в `network.query`; без схемы query запрещён;
+- `network.namedEndpoints` отображает имя на URL или путь с префиксом `$serverUrl`, который проверяется по той же политике;
 - `$serverUrl` разрешает только точный origin значения `serverUrl` профиля;
 - credentials не используются;
 - redirect проверяется повторно и ограничен `maxRedirects`;
 - response ограничен `maxBytes`, включая chunked body;
-- допустим JSON content type; тело возвращается как безопасная строка.
+- `fetch` возвращает тело как строку; `json` разбирает его как JSON независимо от заголовка content type.
 
 Сеть патча не получает cookies текущей игры и не должна использоваться для авторизации на внешнем сервере.
 
@@ -423,7 +432,7 @@ Page runtime и network runtime намеренно разделены:
 
 ## 12. Известные технические ограничения текущей версии
 
-- `runtime.updateMs` описывает контракт манифеста, но автоматический scheduler обновления данных в engine ещё не реализован; интервал нужно реализовать в самом runtime через `setInterval` и cleanup.
+- `runtime.updateMs` не запускает scheduler; используйте явный `LGX.net.poll`.
 - Capability revocation при navigation/destroy/disable требует дополнительного hardening; текущие проверки выполняются на каждом IPC-вызове.
 - Полный lifecycle-отчёт асинхронного network worker не объединён с page runtime bootstrap во всех сценариях.
 - `LGX.modal` и `LGX.mount` являются небольшим helper API, а не полноценной дизайн-системой игры.

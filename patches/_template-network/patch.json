@@ -1,0 +1,24 @@
+{
+  "id": "my-network-patch",
+  "name": "Сетевой шаблон",
+  "version": "0.1.0",
+  "type": "runtime",
+  "enabled": false,
+  "siteVersions": [],
+  "strict": false,
+  "scope": { "channels": ["*"], "pages": ["/c/*"] },
+  "requires": [],
+  "onFail": "disable",
+  "settings": {},
+  "runtime": {
+    "pageScript": { "file": "index.js" },
+    "networkScript": { "file": "network.js" }
+  },
+  "network": {
+    "hosts": ["api.example.com"],
+    "endpoints": ["/status"],
+    "timeoutMs": 10000,
+    "maxBytes": 262144,
+    "maxRedirects": 3
+  }
+}

@@ -1,9 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+type NetBridgeOptions = { method?: string; headers?: Record<string, string> };
+type NetResponse = { status: number; body: string; headers?: Record<string, string> };
+
 const isolatedPatches = ipcRenderer.sendSync('lgx:isolated-bootstrap') as Array<{ worldId: number; token: string }>;
 for (const patch of isolatedPatches) {
+  const netBridge = {
+    fetch: (url: string, options: NetBridgeOptions, requestId: string) => ipcRenderer.invoke('lgx:net-fetch', { token: patch.token, url, options: { ...options, requestId } }) as Promise<NetResponse>,
+    abort: (requestId: string) => { void ipcRenderer.invoke('lgx:net-abort', { token: patch.token, requestId }).catch(() => undefined); },
+  };
   contextBridge.exposeInIsolatedWorld(patch.worldId, 'LGX', {
-    net: { fetch: (url: string, options?: unknown) => ipcRenderer.invoke('lgx:net-fetch', { token: patch.token, url, options }) },
+    net: netBridge,
     log: (...args: unknown[]) => console.info('[lg-native patch]', ...args),
   });
 }
@@ -12,7 +19,6 @@ const bridge = {
   patchReport: () => ipcRenderer.invoke('lgx:patch-report') as Promise<unknown[]>,
   notify: (title: string, body: string) => ipcRenderer.invoke('lgx:notify', { title, body }).then(() => undefined),
   openWindow: (url: string) => ipcRenderer.invoke('lgx:open-window', { url }).then(() => undefined),
-  netFetch: (patchId: string, url: string, signal?: AbortSignal) => ipcRenderer.invoke('lgx:net-fetch', { patchId, url, signal }),
 };
 if (process.isMainFrame && location.origin === 'https://legiongame.gg') contextBridge.exposeInMainWorld('__lgNative', bridge);
 

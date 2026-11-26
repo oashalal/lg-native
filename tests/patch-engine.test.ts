@@ -9,6 +9,9 @@ describe('PatchEngine', () => {
     const engine = new PatchEngine([{ ...base, id: 'source', type: 'source', targets: [{ file: '/site/app.js', anchor: 'window.LGLive = () => true;', expect: 1, replacement: 'window.LGX = true;' }] }]);
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: '13ebcdcfc1', channel: '5opka', page: '/c/5opka/' });
     expect(result.content).toContain('window.LGX = true;'); expect(result.report.entries[0]?.status).toBe('applied');
+    expect(result.content).toContain('installPageLGX');
+    expect(result.content).toContain('function createUI');
+    expect(result.content).toContain('timeout:${selector}');
   });
   it('gates source patches by per-patch compatibility and marks unverified changes', () => {
     const manifest = { ...base, id: 'source', type: 'source', strict: true, targets: [{ file: '/site/app.js', anchor: 'true;', replacement: 'false;' }] };
@@ -65,14 +68,29 @@ describe('PatchEngine', () => {
       { ...base, id: 'network', type: 'runtime', network: { hosts: ['example.com'] } },
     ]);
     const report = engine.runtimeHostMissing({ siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
-    expect(report.entries).toEqual([{ patchId: 'runtime', status: 'skipped', reason: 'runtime-host-missing', siteVer: 'unknown' }]);
+    expect(report.entries).toEqual([{ patchId: 'runtime', status: 'skipped', reason: 'runtime-host-missing', siteVer: 'unknown' }, { patchId: 'network', status: 'skipped', reason: 'network-script-missing', siteVer: 'unknown' }]);
     expect(engine.reports).toContain(report);
   });
-  it('does not inject network-enabled runtime code into the page world', () => {
-    const engine = new PatchEngine([{ ...base, id: 'network', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, settings: { script: 'window.secret = true;' } }]);
-    const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown' });
+  it('keeps page and network runtime parts independent', () => {
+    const engine = new PatchEngine([{ ...base, id: 'network', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, runtime: { pageScript: 'window.pagePart = true;', networkScript: 'globalThis.networkPart = true;' } }]);
+    const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
+    expect(result.content).toContain('window.pagePart = true;');
+    expect(result.content).not.toContain('globalThis.networkPart = true;');
+    expect(result.networkScripts).toEqual([{ patchId: 'network', script: 'globalThis.networkPart = true;' }]);
+    expect(result.report.entries).toEqual([{ patchId: 'network', status: 'applied', siteVer: 'unknown' }]);
+  });
+  it('applies network-only runtimes without adding code to the page bundle', () => {
+    const engine = new PatchEngine([{ ...base, id: 'network-only', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, runtime: { networkScript: 'globalThis.networkPart = true;' } }]);
+    const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
     expect(result.content).toBe(source);
-    expect(result.report.entries).toEqual([]);
+    expect(result.networkScripts).toEqual([{ patchId: 'network-only', script: 'globalThis.networkPart = true;' }]);
+    expect(result.report.entries[0]?.status).toBe('applied');
+  });
+  it('does not inject network-only scripts when safe mode is enabled', () => {
+    const engine = new PatchEngine([{ ...base, id: 'network-only', type: 'runtime', network: { hosts: ['example.com'] }, runtime: { networkScript: 'globalThis.networkPart = true;' } }], [], true);
+    const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown' });
+    expect(result.networkScripts).toEqual([]);
+    expect(result.report.entries[0]?.reason).toBe('safe-mode');
   });
   it('replaces a named function body independently of its formatting', () => {
     const engine = new PatchEngine([{ ...base, id: 'ast', type: 'ast', targets: [{ file: '/site/app.js', functionName: 'render', expect: 1, replacement: 'return 42;' }] }]);

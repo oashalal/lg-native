@@ -2,10 +2,12 @@ import { parseManifest, type PatchManifest, type PatchReport, type PatchReportEn
 import { parse as parseJavaScript } from 'acorn';
 import { compatibility, type CompatibilityMatrix } from './compat.js';
 import { installPageLGX } from '../../runtime/lgx.js';
+import { createUI } from '../../runtime/ui.js';
+import { installChannel } from '../../runtime/channel.js';
 import { publicSettings } from './settings.js';
 
 export interface PatchFileInput { path: string; content: string; siteVer: string; channel?: string; page?: string; }
-export interface PatchFileOutput { content: string; report: PatchReport; }
+export interface PatchFileOutput { content: string; report: PatchReport; networkScripts: Array<{ patchId: string; script: string }>; }
 export interface RuntimePatch { manifest: PatchManifest; run: (api: unknown) => void; }
 
 function count(text: string, needle: string): number {
@@ -69,6 +71,8 @@ export class PatchEngine {
   applyToFile(input: PatchFileInput): PatchFileOutput {
     let content = input.content;
     const entries: PatchReportEntry[] = [];
+    const networkScripts: Array<{ patchId: string; script: string }> = [];
+    let pageRuntimeApplied = false;
     if (this.safeMode) {
       for (const manifest of this.manifests) entries.push({ patchId: manifest.id, status: 'skipped', reason: 'safe-mode', siteVer: input.siteVer });
     } else {
@@ -81,13 +85,14 @@ export class PatchEngine {
         }
         if (this.disabled.has(manifest.id)) { entries.push({ patchId: manifest.id, status: 'skipped', reason: 'failed-earlier', siteVer: input.siteVer }); continue; }
         if (manifest.type === 'runtime') {
-          if (manifest.network?.hosts.length) continue; // Executed in a dedicated isolated world.
           if (input.path !== '/site/app.js') continue;
-          // Runtime patches are local scripts. Appending them to the last application
-          // bundle keeps execution in the page world while preload remains isolated.
-          const script = manifest.runtime?.pageScript ?? manifest.settings.script;
-          if (typeof script !== 'string' || !script.trim()) {
-            entries.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-script-missing', siteVer: input.siteVer });
+          const networkEnabled = Boolean(manifest.network?.hosts.length);
+          const pageSource = manifest.runtime?.pageScript ?? manifest.settings.script;
+          const pageScript = typeof pageSource === 'string' ? pageSource : undefined;
+          const networkSource = manifest.runtime?.networkScript ?? manifest.settings.networkScript;
+          const networkScript = typeof networkSource === 'string' ? networkSource : undefined;
+          if (!pageScript?.trim() && !networkScript?.trim()) {
+            entries.push({ patchId: manifest.id, status: 'skipped', reason: networkEnabled ? 'network-script-missing' : 'runtime-script-missing', siteVer: input.siteVer });
             continue;
           }
           if (compatibility(manifest, input.siteVer, this.matrix) === 'skipped' || compatibility(manifest, input.siteVer, this.matrix) === 'failed') {
@@ -100,8 +105,15 @@ export class PatchEngine {
           }
           const requirements = JSON.stringify(manifest.requires);
           const settings = JSON.stringify(publicSettings(manifest)).replace(/</g, '\\u003c');
-          content += `\n;/* lg-native runtime:${manifest.id} */\n(async function(){try { const requirements = ${requirements}; for (const requirement of requirements) { const end = Date.now() + 10000; const exists = () => requirement.startsWith('global:') ? window[requirement.slice(7)] : requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement); while (!exists()) { if (Date.now() >= end) throw new Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } const settings = ${settings}; ${script}\n} catch (error) { console.error('[lg-native:${manifest.id}]', error); }})();\n`;
-          entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
+          if (pageScript?.trim()) {
+            content += `\n;/* lg-native runtime:${manifest.id} */\n(async function(){try { const channel = (${installChannel.toString()})(${JSON.stringify(manifest.id)}, '', 'page'); const LGX = { ...globalThis.LGX, channel }; LGX.onCleanup(channel.close); const requirements = ${requirements}; for (const requirement of requirements) { const end = Date.now() + 10000; const exists = () => requirement.startsWith('global:') ? window[requirement.slice(7)] : requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement); while (!exists()) { if (Date.now() >= end) throw new Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } const settings = ${settings}; ${pageScript}\n} catch (error) { console.error('[lg-native:${manifest.id}]', error); }})();\n`;
+            pageRuntimeApplied = true;
+          }
+          if (networkEnabled) {
+            if (networkScript?.trim()) networkScripts.push({ patchId: manifest.id, script: networkScript });
+            else entries.push({ patchId: manifest.id, status: 'skipped', reason: 'network-script-missing', siteVer: input.siteVer });
+          }
+          if (pageScript?.trim() || (networkEnabled && networkScript?.trim())) entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
           continue;
         }
         if (manifest.type === 'native') {
@@ -147,20 +159,27 @@ export class PatchEngine {
         }
       }
     }
-    if (input.path === '/site/app.js' && entries.some((entry) => entry.status === 'applied')) {
+    if (input.path === '/site/app.js' && (pageRuntimeApplied || entries.some((entry) => entry.status === 'applied' && this.manifests.some((manifest) => manifest.id === entry.patchId && manifest.type !== 'runtime')))) {
       const settings = Object.fromEntries(this.manifests.map((manifest) => [manifest.id, publicSettings(manifest)]));
       const args = JSON.stringify([input.siteVer, settings]).replace(/</g, '\\u003c');
-      content = `;(${installPageLGX.toString()})(...${args});\n${content}`;
+      content = `;(${installPageLGX.toString()})(...${args},(${createUI.toString()}));\n${content}`;
     }
     const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.path };
     if (entries.length) { this.reports.push(report); if (this.reports.length > 500) this.reports.shift(); }
-    return { content, report };
+    return { content, report, networkScripts };
   }
 
   runtimeHostMissing(input: { siteVer: string; channel: string; page: string }): PatchReport {
     const entries: PatchReportEntry[] = this.safeMode ? [] : this.manifests
-      .filter((manifest) => manifest.enabled && manifest.type === 'runtime' && !manifest.network?.hosts.length && matchesScope(manifest, { ...input, path: '/site/app.js', content: '' }))
-      .map((manifest) => ({ patchId: manifest.id, status: 'skipped', reason: 'runtime-host-missing', siteVer: input.siteVer }));
+      .filter((manifest) => manifest.enabled && manifest.type === 'runtime' && matchesScope(manifest, { ...input, path: '/site/app.js', content: '' }))
+      .flatMap((manifest) => {
+        const result: PatchReportEntry[] = [];
+        const pageSource = manifest.runtime?.pageScript ?? manifest.settings.script;
+        const networkSource = manifest.runtime?.networkScript ?? manifest.settings.networkScript;
+        if (pageSource || !manifest.network?.hosts.length) result.push({ patchId: manifest.id, status: 'skipped', reason: 'runtime-host-missing', siteVer: input.siteVer });
+        if (manifest.network?.hosts.length && typeof networkSource !== 'string' && !(networkSource && typeof networkSource === 'object')) result.push({ patchId: manifest.id, status: 'skipped', reason: 'network-script-missing', siteVer: input.siteVer });
+        return result;
+      });
     const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.page };
     if (entries.length) this.record(report);
     return report;
