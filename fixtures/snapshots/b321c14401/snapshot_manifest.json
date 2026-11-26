@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "kind": "version",
+  "site_ver": "b321c14401",
+  "complete": false,
+  "publication_status": "partial",
+  "origin": "https://legiongame.gg",
+  "channel": "5opka",
+  "counts": {
+    "versioned_total": 259,
+    "downloaded": 251,
+    "versioned_missing": 8
+  },
+  "missing": [
+    "https://legiongame.gg/site/warcmd.css?v=a20a5d8c80",
+    "https://legiongame.gg/site/warcmd.js?v=225c94f82d",
+    "https://legiongame.gg/site/season.css?v=d684492385",
+    "https://legiongame.gg/site/season.js?v=1185eea149",
+    "https://legiongame.gg/platform/newsedit.css?v=4",
+    "https://legiongame.gg/site/newssite.css?v=4",
+    "https://legiongame.gg/platform/newsedit.js?v=5",
+    "https://legiongame.gg/site/newssite.js?v=5"
+  ]
+}

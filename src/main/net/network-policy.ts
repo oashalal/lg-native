@@ -31,13 +31,27 @@ export function allowedHost(manifest: PatchManifest, rawUrl: string, serverUrl?:
   });
 }
 
-function allowedPath(manifest: PatchManifest, url: URL): boolean {
+function allowedPath(manifest: PatchManifest, url: URL, serverUrl?: string): boolean {
   const paths = manifest.network?.endpoints ?? [];
-  return paths.length > 0 && paths.includes(url.pathname);
+  const namedTargets = Object.values(manifest.network?.namedEndpoints ?? {}).flatMap((target) => {
+    try {
+      if (target.startsWith('$serverUrl')) {
+        if (!/^\$serverUrl(?:\/|$)/.test(target)) return [];
+        const path = target.slice('$serverUrl'.length) || '/';
+        const base = serverUrl && parseUrl(serverUrl);
+        return base && base.origin === url.origin && new URL(path, base).pathname === url.pathname ? [url.origin] : [];
+      }
+      const parsed = parseUrl(target);
+      return parsed?.pathname === url.pathname && parsed.origin === url.origin ? [parsed.origin] : [];
+    } catch { return []; }
+  });
+  return paths.includes(url.pathname) || namedTargets.includes(url.origin);
 }
 
 function validateQuery(manifest: PatchManifest, url: URL): void {
-  const schema = manifest.network?.query ?? {};
+  const configured = manifest.network?.query ?? {};
+  const perPath = Object.keys(configured).some((key) => key.startsWith('/'));
+  const schema = (perPath ? configured[url.pathname] ?? {} : configured) as Record<string, { type: 'string' | 'number' | 'boolean'; required: boolean; maxLength: number }>;
   for (const key of url.searchParams.keys()) if (!Object.hasOwn(schema, key)) fail('invalid-query');
   for (const [key, spec] of Object.entries(schema)) {
     const values = url.searchParams.getAll(key);
@@ -79,7 +93,7 @@ export async function fetchForPatch(manifest: PatchManifest, request: FetchReque
       const parsed = parseUrl(url);
       if (!parsed) fail('host-not-allowed');
       if (!allowedHost(manifest, url, serverUrl)) fail('host-not-allowed');
-      if (!allowedPath(manifest, parsed)) fail('endpoint-not-allowed');
+      if (!allowedPath(manifest, parsed, serverUrl)) fail('endpoint-not-allowed');
       validateQuery(manifest, parsed);
       const response = await fetch(parsed, { method, headers, signal, credentials: 'omit', redirect: 'manual' });
       if ([301, 302, 303, 307, 308].includes(response.status)) {

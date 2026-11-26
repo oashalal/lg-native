@@ -47,8 +47,8 @@ export function installPageLGX(siteVer: string, patchSettings: Record<string, Re
     settings: (id: string) => createUIHelper(id, patchSettings[id] ?? {}, cleanupFor).settings(),
     log: (id: string, ...args: unknown[]) => console.info(`[lg-native:${id}]`, ...args),
      patchReport: () => bridge ? bridge.patchReport() : Promise.reject(new Error('bridge-unavailable')),
-     channel: { send: channelSend, on: (fn: (value: unknown) => void) => { channelListeners.add(fn); const off = () => channelListeners.delete(fn); cleanups.add(off); return off; } },
-     ui: { text: (value: unknown) => document.createTextNode(String(value)), jsonView: (value: unknown) => document.createTextNode(JSON.stringify(jsonValue(value))) },
+      channel: { send: channelSend, on: (fn: (value: unknown) => void) => { channelListeners.add(fn); const off = () => channelListeners.delete(fn); cleanups.add(off); return off; } },
+     ui: { text: (value: unknown) => document.createTextNode(String(value)), jsonView: (value: unknown) => document.createTextNode(JSON.stringify(jsonValue(value), null, 2) ?? String(value)) },
      native: {
       notify: (title: string, body: string) => bridge ? bridge.notify(title, body) : Promise.reject(new Error('bridge-unavailable')),
       openWindow: (url: string) => bridge ? bridge.openWindow(url) : Promise.reject(new Error('bridge-unavailable')),

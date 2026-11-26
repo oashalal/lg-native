@@ -52,7 +52,7 @@ export function createUI(
     hud: { button: (id: string, label: string, action: () => void) => {
       const existing = document.querySelector<HTMLButtonElement>(`[data-lg-native-hud-button="${CSS.escape(id)}"]`);
       if (existing) return existing;
-      const button = document.createElement('button'); button.type = 'button'; button.dataset.lgNativeHudButton = id; button.textContent = label; button.addEventListener('click', action);
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'gu-b'; button.dataset.lgNativeHudButton = id; const icon = document.createElement('i'); icon.className = 'gu-bi'; icon.setAttribute('aria-hidden', 'true'); button.append(icon, document.createTextNode(label)); button.addEventListener('click', action);
       const place = () => { const hud = document.querySelector<HTMLElement>('#gu-hud .gu-main') ?? document.body; if (!hud.contains(button)) hud.append(button); };
       place(); const observer = new MutationObserver(place); observer.observe(document.body, { childList: true, subtree: true });
       register(() => { observer.disconnect(); button.removeEventListener('click', action); button.remove(); });

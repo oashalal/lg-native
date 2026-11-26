@@ -42,6 +42,10 @@ function replaceFunctionBody(source: string, name: string, replacement: string, 
   return result;
 }
 
+function reportKey(report: PatchReport): string {
+  return JSON.stringify([report.siteVer, report.path ?? '', report.fileVer ?? '', report.entries]);
+}
+
 function matchesScope(manifest: PatchManifest, input: PatchFileInput): boolean {
   const glob = (pattern: string, value: string | undefined) => !value || pattern === '*' || (pattern.endsWith('*') ? value.startsWith(pattern.slice(0, -1)) : pattern === value);
   return manifest.scope.channels.some((pattern) => glob(pattern, input.channel)) && manifest.scope.pages.some((pattern) => glob(pattern, input.page));
@@ -52,6 +56,7 @@ export class PatchEngine {
   private readonly runtime: RuntimePatch[];
   private readonly safeMode: boolean;
   private readonly disabled = new Set<string>();
+  private readonly reportKeys = new Set<string>();
   readonly reports: PatchReport[] = [];
 
   constructor(manifests: unknown[], runtime: RuntimePatch[] = [], safeMode = false, private readonly matrix: CompatibilityMatrix = {}) {
@@ -64,8 +69,28 @@ export class PatchEngine {
   }
 
   record(report: PatchReport): void {
+    const key = reportKey(report);
+    if (this.reportKeys.has(key)) return;
+    this.reportKeys.add(key);
     this.reports.push(report);
-    if (this.reports.length > 500) this.reports.shift();
+    if (this.reports.length > 500) {
+      const removed = this.reports.shift();
+      if (removed) this.reportKeys.delete(reportKey(removed));
+    }
+  }
+
+  settleRuntime(patchId: string, siteVer: string, path: string, status: 'applied' | 'failed', reason?: string): PatchReport | undefined {
+    for (let i = this.reports.length - 1; i >= 0; i--) {
+      const report = this.reports[i]!;
+      const entry = report.entries.find((candidate) => candidate.patchId === patchId && candidate.status === 'pending');
+      if (report.path !== path || report.siteVer !== siteVer || !entry) continue;
+      entry.status = status;
+      if (reason) entry.reason = reason;
+      this.reportKeys.clear();
+      for (const item of this.reports) this.reportKeys.add(reportKey(item));
+      return report;
+    }
+    return undefined;
   }
 
   applyToFile(input: PatchFileInput): PatchFileOutput {
@@ -109,11 +134,12 @@ export class PatchEngine {
             content += `\n;/* lg-native runtime:${manifest.id} */\n(async function(){try { const channel = (${installChannel.toString()})(${JSON.stringify(manifest.id)}, '', 'page'); const LGX = { ...globalThis.LGX, channel }; LGX.onCleanup(channel.close); const requirements = ${requirements}; for (const requirement of requirements) { const end = Date.now() + 10000; const exists = () => requirement.startsWith('global:') ? window[requirement.slice(7)] : requirement.startsWith('file:') ? Array.from(document.querySelectorAll('script[src],link[href]')).some(el => { try { return new URL(el.src || el.href, document.baseURI).pathname === requirement.slice(5); } catch { return false; } }) : document.querySelector(requirement.startsWith('selector:') ? requirement.slice(9) : requirement); while (!exists()) { if (Date.now() >= end) throw new Error('requirement-missing:' + requirement); await new Promise(resolve => setTimeout(resolve, 100)); } } const settings = ${settings}; ${pageScript}\n} catch (error) { console.error('[lg-native:${manifest.id}]', error); }})();\n`;
             pageRuntimeApplied = true;
           }
-          if (networkEnabled) {
-            if (networkScript?.trim()) networkScripts.push({ patchId: manifest.id, script: networkScript });
-            else entries.push({ patchId: manifest.id, status: 'skipped', reason: 'network-script-missing', siteVer: input.siteVer });
+          if (networkEnabled && !networkScript?.trim()) entries.push({ patchId: manifest.id, status: 'skipped', reason: 'network-script-missing', siteVer: input.siteVer });
+          if (networkEnabled && networkScript?.trim()) {
+            networkScripts.push({ patchId: manifest.id, script: networkScript });
+            entries.push({ patchId: manifest.id, status: 'pending', reason: 'awaiting-execution', siteVer: input.siteVer });
           }
-          if (pageScript?.trim() || (networkEnabled && networkScript?.trim())) entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
+          else if (pageScript?.trim()) entries.push({ patchId: manifest.id, status: 'applied', siteVer: input.siteVer });
           continue;
         }
         if (manifest.type === 'native') {
@@ -165,7 +191,7 @@ export class PatchEngine {
       content = `;(${installPageLGX.toString()})(...${args},(${createUI.toString()}));\n${content}`;
     }
     const report: PatchReport = { siteVer: input.siteVer, entries, safeMode: this.safeMode, generatedAt: new Date().toISOString(), path: input.path };
-    if (entries.length) { this.reports.push(report); if (this.reports.length > 500) this.reports.shift(); }
+    if (entries.length) this.record(report);
     return { content, report, networkScripts };
   }
 

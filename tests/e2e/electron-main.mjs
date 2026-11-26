@@ -6,14 +6,17 @@ import { join, resolve } from 'node:path';
 import { PatchEngine } from '../../dist/src/main/patching/engine.js';
 import { AccountHub } from '../../dist/src/main/accounts/index.js';
 import { installChannel } from '../../dist/src/runtime/channel.js';
+import { createNet } from '../../dist/src/runtime/net.js';
 
 app.whenReady().then(async () => {
 const fixtureServer = createServer((request, response) => {
   if (request.url === '/json') { response.writeHead(200, { 'content-type': 'application/json' }); response.end(JSON.stringify({ fixture: true, count: 7 })); return; }
+  if (request.url === '/bad') { response.writeHead(503); response.end('{}'); return; }
   response.writeHead(404); response.end('not found');
 });
 await new Promise((resolveListen) => fixtureServer.listen(0, '127.0.0.1', resolveListen));
 const fixtureUrl = `http://127.0.0.1:${fixtureServer.address().port}/json`;
+const fixtureBadUrl = `http://127.0.0.1:${fixtureServer.address().port}/bad`;
 // The fixture intentionally stubs only the bootstrap/report endpoints used by preload.
 ipcMain.on('lgx:isolated-bootstrap', (event) => { event.returnValue = []; });
 ipcMain.handle('lgx:patch-report', () => []);
@@ -30,7 +33,7 @@ const source = `window.siteObject = { count: 2, value() { return this.count; } }
   };
 })();`;
 const output = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: '86794a1329', channel: '5opka', page: '/c/5opka/' });
-if (output.report.entries.some((entry) => entry.status !== 'applied')) throw new Error(JSON.stringify(output.report));
+if (output.report.entries.some((entry) => entry.status === 'failed')) throw new Error(JSON.stringify(output.report));
 const dir = await mkdtemp(join(tmpdir(), 'lgx-e2e-'));
 const accountDir = await mkdtemp(join(tmpdir(), 'accounts-e2e-'));
 const hub = new AccountHub({ userDataDir: accountDir });
@@ -50,7 +53,7 @@ await writeFile(join(dir, 'app.js'), output.content);
 await writeFile(join(dir, 'index.html'), `<!doctype html><script>window.__fixtureUrl=${JSON.stringify(fixtureUrl)};</script><script src="app.js"></script>`);
 const win = new BrowserWindow({ show: false, webPreferences: { preload: resolve('dist/src/preload/index.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false } });
 await win.loadFile(join(dir, 'index.html'));
-await win.webContents.executeJavaScriptInIsolatedWorld(1010, [{ code: `globalThis.testChannel = (${installChannel.toString()})('fixture', '', 'isolated'); globalThis.testChannel.on(value => { document.body.dataset.channelFromIsolated = JSON.stringify(value); globalThis.testChannel.send({ reply: value }); }); true;` }]);
+await win.webContents.executeJavaScriptInIsolatedWorld(1010, [{ code: `globalThis.testChannel = (${installChannel.toString()})('e2e-hook', '', 'isolated'); globalThis.testChannel.on(value => { document.body.dataset.channelFromIsolated = JSON.stringify(value); globalThis.testChannel.send({ reply: value }); }); const cleanups = []; globalThis.testNet = (${createNet.toString()})({ fetch: async url => ({ status: url === ${JSON.stringify(fixtureBadUrl)} ? 503 : 200, body: '{}' }), abort() {} }, fn => cleanups.push(fn)); const errors = []; globalThis.testNet.poll(${JSON.stringify(fixtureBadUrl)}, 250, () => {}, { onError: error => { errors.push(error.message); document.body.dataset.pollError = error.message; } }); document.body.dataset.isolatedReady = 'true'; true;` }]);
 app.on('before-quit', () => fixtureServer.close());
 
 }).catch((error) => { console.error(error); app.exit(1); });

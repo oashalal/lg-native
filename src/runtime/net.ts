@@ -1,14 +1,15 @@
 export type NetBridgeOptions = { method?: string; headers?: Record<string, string> };
-export type NetResponse = { status: number; body: string; headers?: Record<string, string> };
+export type NetResponse = { status: number; body: string; headers?: Record<string, string>; errorCode?: string };
 export type NetBridge = {
   fetch: (url: string, options: NetBridgeOptions, requestId: string) => Promise<NetResponse>;
   abort: (requestId: string) => void;
 };
 export type NetOptions = NetBridgeOptions & { signal?: AbortSignal };
+export type PollOptions = NetOptions & { onError?: (error: unknown) => void };
 export type NetApi = {
   fetch: (url: string, options?: NetOptions) => Promise<NetResponse>;
   json: (url: string, options?: NetOptions) => Promise<unknown>;
-  poll: (url: string, intervalMs: number, callback: (value: unknown) => void, options?: NetOptions) => () => void;
+  poll: (url: string, intervalMs: number, callback: (value: unknown) => void, options?: PollOptions) => () => void;
 };
 
 // Serializable: injected into an isolated world via Function#toString.
@@ -28,7 +29,10 @@ export function createNet(bridge: NetBridge, onCleanup: (cleanup: () => void) =>
         bridge.abort(requestId);
       };
       const onAbort = () => abort();
-      const request = bridge.fetch(url, bridgeOptions, requestId);
+      const request = bridge.fetch(url, bridgeOptions, requestId).then((response) => {
+        if (response.errorCode) throw new Error(response.errorCode);
+        return response;
+      });
       signal?.addEventListener('abort', onAbort, { once: true });
       if (signal?.aborted) abort();
       return request.finally(() => {
@@ -54,12 +58,13 @@ export function createNet(bridge: NetBridge, onCleanup: (cleanup: () => void) =>
         controller.abort();
         options?.signal?.removeEventListener('abort', stop);
       };
-      const pollOptions: NetOptions = { ...options, signal: controller.signal };
+      const { onError, ...requestOptions } = options ?? {};
+      const pollOptions: NetOptions = { ...requestOptions, signal: controller.signal };
       const tick = async () => {
         if (stopped || running) return;
         running = true;
         try { const value = await net.json(url, pollOptions); if (!stopped) callback(value); }
-        catch (error) { if (!stopped) console.warn('[lg-native patch] poll failed', error); }
+        catch (error) { if (!stopped) { if (onError) { try { onError(error); } catch (callbackError) { try { console.warn('[lg-native patch] poll onError failed', callbackError); } catch { /* logging must not stop polling */ } } } else { try { console.warn('[lg-native patch] poll failed', error); } catch { /* logging must not stop polling */ } } } }
         finally { running = false; if (!stopped) timer = setTimeout(tick, interval); }
       };
       onCleanup(stop);

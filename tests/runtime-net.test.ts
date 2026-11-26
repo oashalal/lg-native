@@ -10,6 +10,11 @@ function harness(fetchImpl: NetBridge['fetch'] = async () => ({ status: 200, bod
 }
 
 describe('createNet', () => {
+  it('turns serialized IPC network error codes into stable errors', async () => {
+    const { net } = harness(async () => ({ status: 0, body: '', errorCode: 'timeout' }));
+    await expect(net.fetch('https://example.test')).rejects.toThrow('timeout');
+  });
+
   it('uses a bridge request ID and returns parsed JSON', async () => {
     const { net, bridge } = harness();
     await expect(net.json('/endpoint')).resolves.toEqual({ ok: true });
@@ -47,6 +52,31 @@ describe('createNet', () => {
     await vi.waitFor(() => expect(callback).not.toHaveBeenCalled());
     await new Promise((done) => setTimeout(done, 0));
     expect(bridge.fetch).toHaveBeenCalledOnce();
+  });
+
+  it('keeps polling and surfaces request failures via warn', async () => {
+    vi.useFakeTimers();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    const { net, bridge } = harness(async () => { throw new Error('network-down'); });
+    net.poll('/poll', 250, () => undefined);
+    await vi.waitFor(() => expect(warn).toHaveBeenCalledWith('[lg-native patch] poll failed', expect.objectContaining({ message: 'network-down' })));
+    expect(bridge.fetch).toHaveBeenCalledOnce();
+    await vi.advanceTimersByTimeAsync(250);
+    expect(bridge.fetch).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
+    warn.mockRestore();
+  });
+
+  it('delivers poll failures through options.onError and continues polling', async () => {
+    vi.useFakeTimers();
+    const onError = vi.fn();
+    const { net, bridge } = harness(async () => { throw new Error('network-down'); });
+    net.poll('/poll', 250, () => undefined, { onError });
+    await vi.waitFor(() => expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'network-down' })));
+    expect(bridge.fetch).toHaveBeenCalledOnce();
+    await vi.advanceTimersByTimeAsync(250);
+    expect(bridge.fetch).toHaveBeenCalledTimes(2);
+    vi.useRealTimers();
   });
 
   it('cleans all active fetches on runtime cleanup', async () => {

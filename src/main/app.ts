@@ -19,7 +19,7 @@ import { createNet } from '../runtime/net.js';
 import { installChannel } from '../runtime/channel.js';
 
 const GAME_ORIGIN = 'https://legiongame.gg';
-const channel = process.env.LG_CHANNEL ?? process.argv.find((arg) => arg.startsWith('--channel='))?.slice('--channel='.length) ?? 'zakvielchannel';
+const channel = process.env.LG_CHANNEL ?? process.argv.find((arg) => arg.startsWith('--channel='))?.slice('--channel='.length) ?? '5opka';
 const safeMode = process.argv.includes('--safe-mode');
 const userData = app.getPath('userData');
 const defaultProfileDir = join(userData, 'profiles', 'default');
@@ -225,11 +225,18 @@ function bindView(view: WebContentsView, profileId: string, url: string, request
   tabs.set(tabId, tab);
   if (!existing) hub.createTab(profileId, url, tabId);
   view.webContents.setWindowOpenHandler(({ url: openUrl }) => { if (isAllowedNavigation(openUrl)) return { action: 'allow' }; void shell.openExternal(openUrl); return { action: 'deny' }; });
-  view.webContents.on('did-start-navigation', (_event, _url, _inPlace, isMainFrame) => {
-    if (!isMainFrame) return;
+  view.webContents.on('did-start-navigation', (_event, _url, inPlace, isMainFrame) => {
+    if (!isMainFrame || inPlace) return;
     revokeCapabilitiesFor(view.webContents, tabId);
     const current = tabs.get(tabId);
     if (current) current.documentGeneration++;
+  });
+  view.webContents.on('did-navigate-in-page', (_event, navigateUrl, isMainFrame) => {
+    if (!isMainFrame) return;
+    const current = tabs.get(tabId);
+    if (!current) return;
+    current.url = navigateUrl;
+    void hub.persistTabs();
   });
   view.webContents.on('destroyed', () => revokeCapabilitiesFor(view.webContents, tabId));
   view.webContents.on('will-navigate', (event, navigateUrl) => { if (!isAllowedNavigation(navigateUrl)) event.preventDefault(); });
@@ -379,8 +386,12 @@ async function runIsolatedPatches(view: WebContentsView, profileRuntime: Profile
       entry = { patchId: manifest.id, status: 'applied', siteVer: profileRuntime.siteVer };
     }
     catch (error) { entry = { patchId: manifest.id, status: 'failed', siteVer: profileRuntime.siteVer, reason: error instanceof Error ? error.message : String(error) }; }
-    const report = { siteVer: profileRuntime.siteVer, entries: [entry], safeMode, generatedAt: new Date().toISOString(), path: url.pathname };
-    profileRuntime.engine.record(report); await recordPatchReport(profileRuntime, report);
+    const report = profileRuntime.engine.settleRuntime(manifest.id, profileRuntime.siteVer, '/site/app.js', entry.status, entry.reason);
+    if (report) await recordPatchReport(profileRuntime, report);
+    else {
+      const standalone = { siteVer: profileRuntime.siteVer, entries: [entry], safeMode, generatedAt: new Date().toISOString(), path: url.pathname };
+      profileRuntime.engine.record(standalone); await recordPatchReport(profileRuntime, standalone);
+    }
   }
 }
 
@@ -504,10 +515,10 @@ async function loadPatchManifests(): Promise<void> {
   if (fallbackRuntime) fallbackRuntime.engine = new PatchEngine(manifests, [], safeMode, matrix);
   for (const contents of [...tabs.values()].map((tab) => tab.view?.webContents).filter((item): item is Electron.WebContents => !!item)) revokeCapabilitiesFor(contents);
   for (const [token, capability] of capabilities) if (!capability.sender) capabilities.delete(token);
-  for (const manifest of manifests) {
+  for (const [manifestIndex, manifest] of manifests.entries()) {
     const networkScript = inlineSource(manifest.runtime?.networkScript) ?? (typeof manifest.settings.networkScript === 'string' ? manifest.settings.networkScript : undefined);
     if (!safeMode && manifest.enabled && manifest.type === 'runtime' && manifest.network?.hosts.length && networkScript) {
-      capabilities.set(randomBytes(32).toString('hex'), { manifest, worldId: 1000 + capabilities.size, script: networkScript });
+       capabilities.set(randomBytes(32).toString('hex'), { manifest, worldId: 1000 + manifestIndex, script: networkScript });
     }
   }
   for (const runtime of runtimes.values()) {
@@ -712,8 +723,10 @@ function installIpc(): void {
       const controller = new AbortController();
       const active: ActiveRequest = { owner: patch, requestId, controller };
       activeRequests.set(key, active);
-      try { return await fetchForPatch(manifest, { ...options, url: data.url, signal: controller.signal }, runtime.serverUrl); }
-      finally { if (activeRequests.get(key) === active) activeRequests.delete(key); }
+       try {
+         try { return await fetchForPatch(manifest, { ...options, url: data.url, signal: controller.signal }, runtime.serverUrl); }
+         catch (error) { return { status: 0, headers: {}, body: '', errorCode: error instanceof Error ? error.message : 'network-error' }; }
+       } finally { if (activeRequests.get(key) === active) activeRequests.delete(key); }
   });
   ipcMain.handle(IPC.netAbort, (event, value: unknown) => {
      if (!value || typeof value !== 'object') throw new Error('network-abort-denied');

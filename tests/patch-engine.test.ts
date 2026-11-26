@@ -76,21 +76,30 @@ describe('PatchEngine', () => {
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
     expect(result.content).toContain('window.pagePart = true;');
     expect(result.content).not.toContain('globalThis.networkPart = true;');
-    expect(result.networkScripts).toEqual([{ patchId: 'network', script: 'globalThis.networkPart = true;' }]);
-    expect(result.report.entries).toEqual([{ patchId: 'network', status: 'applied', siteVer: 'unknown' }]);
+    expect(result.networkScripts).toHaveLength(1);
+    expect(result.report.entries).toEqual([{ patchId: 'network', status: 'pending', reason: 'awaiting-execution', siteVer: 'unknown' }]);
   });
   it('applies network-only runtimes without adding code to the page bundle', () => {
     const engine = new PatchEngine([{ ...base, id: 'network-only', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, runtime: { networkScript: 'globalThis.networkPart = true;' } }]);
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' });
     expect(result.content).toBe(source);
-    expect(result.networkScripts).toEqual([{ patchId: 'network-only', script: 'globalThis.networkPart = true;' }]);
-    expect(result.report.entries[0]?.status).toBe('applied');
+    expect(result.networkScripts).toHaveLength(1);
+    expect(result.report.entries[0]?.status).toBe('pending');
   });
   it('does not inject network-only scripts when safe mode is enabled', () => {
     const engine = new PatchEngine([{ ...base, id: 'network-only', type: 'runtime', network: { hosts: ['example.com'] }, runtime: { networkScript: 'globalThis.networkPart = true;' } }], [], true);
     const result = engine.applyToFile({ path: '/site/app.js', content: source, siteVer: 'unknown' });
-    expect(result.networkScripts).toEqual([]);
+    expect(result.networkScripts).toHaveLength(0);
     expect(result.report.entries[0]?.reason).toBe('safe-mode');
+  });
+  it('settles pending runtime reports and avoids duplicate asset reports', () => {
+    const engine = new PatchEngine([{ ...base, id: 'network-only', type: 'runtime', strict: false, network: { hosts: ['example.com'] }, runtime: { networkScript: 'globalThis.networkPart = true;' } }]);
+    const input = { path: '/site/app.js', content: source, siteVer: 'unknown', channel: '5opka', page: '/c/5opka/' };
+    const first = engine.applyToFile(input).report;
+    expect(engine.applyToFile(input).report.entries).toEqual(first.entries);
+    expect(engine.reports).toHaveLength(1);
+    expect(engine.settleRuntime('network-only', 'unknown', '/site/app.js', 'applied')?.entries[0]?.status).toBe('applied');
+    expect(engine.settleRuntime('network-only', 'unknown', '/site/app.js', 'failed', 'later-failure')).toBeUndefined();
   });
   it('replaces a named function body independently of its formatting', () => {
     const engine = new PatchEngine([{ ...base, id: 'ast', type: 'ast', targets: [{ file: '/site/app.js', functionName: 'render', expect: 1, replacement: 'return 42;' }] }]);

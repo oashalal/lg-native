@@ -1,6 +1,7 @@
 import { createServer, type Server } from 'node:http';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { allowedHost, assertSuccessfulJson, fetchForPatch } from '../src/main/net/network-policy.js';
+import { parseManifest } from '../src/shared/manifest.js';
 
 const manifest = { id: 'x', name: 'x', version: '1', type: 'runtime' as const, enabled: true, siteVersions: [], strict: false, scope: { channels: ['*'], pages: ['*'] }, targets: [], requires: [], onFail: 'disable' as const, settings: {}, network: { hosts: ['api.example.com'], endpoints: ['/a'] } };
 const servers: Server[] = [];
@@ -23,6 +24,23 @@ describe('network policy', () => {
     for (const url of ['https://evil.example/a', 'http://api.example.com/a', 'https://u:p@api.example.com/a', 'https://api.example.com:444/a', 'https://api.example.com/a#x', 'https://api.example.com/%2fadmin']) expect(allowedHost(manifest, url)).toBe(false);
     expect(allowedHost({ ...manifest, network: { hosts: ['https://api.example.com'] } }, 'https://api.example.com/a')).toBe(false);
     expect(allowedHost({ ...manifest, network: { hosts: ['localhost'] } }, 'http://localhost/a')).toBe(true);
+  });
+  it('validates host syntax, permits named endpoints without duplicating their paths, and supports per-path query schemas', async () => {
+    const base = await serve((_req, res) => res.end('ok'));
+    const host = new URL(base).host;
+    expect(() => parseManifest({ id: 'bad-host', name: 'Bad', version: '1', type: 'runtime', network: { hosts: ['https://example.com'] } })).toThrow();
+    expect(() => parseManifest({ id: 'bad-host', name: 'Bad', version: '1', type: 'runtime', network: { hosts: ['example.com/path'] } })).toThrow();
+    expect(() => parseManifest({ id: 'bad-host', name: 'Bad', version: '1', type: 'runtime', network: { hosts: ['Example.com'] } })).toThrow();
+    expect(parseManifest({ id: 'valid', name: 'Valid', version: '1', type: 'runtime', network: { hosts: [host], query: { '/status': { verbose: { type: 'boolean' } } } } }).network?.query).toHaveProperty('/status');
+    const m = { ...manifest, network: { hosts: ['$serverUrl', host], endpoints: [], namedEndpoints: { status: `${base}/status` }, query: { '/status': { verbose: { type: 'boolean' as const, required: true, maxLength: 8 } } } } };
+    expect((await fetchForPatch(m, { url: `${base}/status?verbose=true` }, base)).body).toBe('ok');
+    await expect(fetchForPatch(m, { url: 'status' }, base)).rejects.toThrow('invalid-query');
+    await expect(fetchForPatch(m, { url: `${base}/other?verbose=true` }, base)).rejects.toThrow('endpoint-not-allowed');
+    const other = await serve((_req, res) => res.end('wrong host'));
+    const restricted = { ...m, network: { ...m.network, hosts: [host, new URL(other).host] } };
+    await expect(fetchForPatch(restricted, { url: `${other}/status?verbose=true` }, base)).rejects.toThrow('endpoint-not-allowed');
+    const serverNamed = { ...restricted, network: { ...restricted.network, namedEndpoints: { status: '$serverUrl/status' } } };
+    await expect(fetchForPatch(serverNamed, { url: `${other}/status?verbose=true` }, base)).rejects.toThrow('endpoint-not-allowed');
   });
   it('requires exact allowlisted paths and disallows an empty path allowlist', async () => {
     await expect(fetchForPatch({ ...manifest, network: { hosts: ['api.example.com'] } }, { url: 'https://api.example.com/a' })).rejects.toThrow('endpoint-not-allowed');

@@ -18,10 +18,15 @@ const queryParameter = z.object({
   maxLength: z.number().int().min(1).max(4096).default(256),
 });
 const networkSchema = z.object({
-  hosts: z.array(z.string().min(1)),
+  // Validate hosts as host[:port] or the server profile token; reject URL syntax early.
+  hosts: z.array(z.string().min(1).refine((host) => {
+    if (host === '$serverUrl') return true;
+    if (host !== host.toLowerCase() || /[/?#@\\]/.test(host)) return false;
+    try { const url = new URL(`https://${host}`); return url.host === host && url.pathname === '/'; } catch { return false; }
+  }, 'invalid-host')),
   endpoints: z.array(z.string().startsWith('/')).default([]),
   namedEndpoints: z.record(z.string().regex(/^[a-zA-Z][\w-]*$/), z.string().min(1)).default({}),
-  query: z.record(z.string().regex(/^[a-zA-Z][\w-]*$/), queryParameter).default({}),
+  query: z.union([z.record(z.string().regex(/^[a-zA-Z][\w-]*$/), queryParameter), z.record(z.string().startsWith('/'), z.record(z.string().regex(/^[a-zA-Z][\w-]*$/), queryParameter))]).default({}),
   serverUrl: z.string().url().optional(),
   timeoutMs: z.number().int().positive().max(120_000).optional(),
   maxBytes: z.number().int().positive().max(20_000_000).optional(),
@@ -55,11 +60,12 @@ export const patchManifestSchema = z.object({
 });
 
 type ParsedManifest = z.infer<typeof patchManifestSchema>;
-export type PatchNetwork = { hosts: string[]; endpoints?: string[] | undefined; namedEndpoints?: Record<string, string> | undefined; query?: Record<string, { type: 'string' | 'number' | 'boolean'; required: boolean; maxLength: number }> | undefined; serverUrl?: string | undefined; timeoutMs?: number | undefined; maxBytes?: number | undefined; maxRedirects?: number | undefined };
+type QueryField = { type: 'string' | 'number' | 'boolean'; required: boolean; maxLength: number };
+export type PatchNetwork = { hosts: string[]; endpoints?: string[] | undefined; namedEndpoints?: Record<string, string> | undefined; query?: Record<string, QueryField | Record<string, QueryField>> | undefined; serverUrl?: string | undefined; timeoutMs?: number | undefined; maxBytes?: number | undefined; maxRedirects?: number | undefined };
 export type ScriptSource = string | { file: string };
 export type PatchManifest = Omit<ParsedManifest, 'settingsSchema' | 'network' | 'runtime'> & { settingsSchema?: ParsedManifest['settingsSchema'] | undefined; network?: PatchNetwork | undefined; runtime?: { pageScript?: ScriptSource | undefined; networkScript?: ScriptSource | undefined; updateMs?: number | undefined } | undefined };
 export type PatchTypeName = z.infer<typeof PatchType>;
-export type PatchStatus = 'applied' | 'skipped' | 'failed';
+export type PatchStatus = 'applied' | 'pending' | 'skipped' | 'failed';
 export interface PatchReportEntry { patchId: string; status: PatchStatus; reason?: string; siteVer: string; }
 export interface PatchReport { siteVer: string; entries: PatchReportEntry[]; safeMode: boolean; generatedAt: string; path?: string; fileVer?: string; }
 
